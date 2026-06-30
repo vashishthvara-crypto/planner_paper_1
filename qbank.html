@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CA Inter — Dedicated Question Bank & Analytics</title>
+<style>
+:root {
+  --gh-canvas: #ffffff;
+  --gh-subtle: #f8f9fa;
+  --gh-border: #d0d7de;
+  --gh-border-muted: #e1e4e8;
+  --gh-header: #f8f9fa;
+  --gh-sidebar: #ffffff;
+  --gh-sidebar-text: #24292f;
+  --gh-sidebar-muted: #57606a;
+  --gh-sidebar-border: #e1e4e8;
+  --gh-text: #1f2328;
+  --gh-text-2: #57606a;
+  --gh-text-3: #818b98;
+  --gh-accent: #0969da;
+  --gh-accent-bg: #f1f8ff;
+  --gh-green: #1a7f37;
+  --gh-green-bg: #dafbe1;
+  --gh-orange: #9a6700;
+  --gh-orange-bg: #fff8c5;
+  --gh-red: #d1242f;
+  --gh-red-bg: #ffebe9;
+  --r: 6px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif;font-size:14px;background:var(--gh-subtle);color:var(--gh-text);display:flex;flex-direction:column;min-height:100vh;}
+
+/* HEADER */
+.hdr{background:var(--gh-header);height:54px;display:flex;align-items:center;padding:0 24px;gap:16px;border-bottom:1px solid var(--gh-border-muted);box-shadow:0 1px 3px rgba(0,0,0,0.02);}
+.hdr-logo{display:flex;align-items:center;gap:10px;color:var(--gh-text);font-weight:700;font-size:15px;text-decoration:none;}
+.hdr-logo .dot{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#8250df,#0969da);display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;}
+.hdr-logo .repo{color:var(--gh-text-2);font-weight:500;}
+.hdr-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
+.nav-btn{padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;border:1px solid var(--gh-border);color:var(--gh-text-2);background:#fff;transition:0.2s;}
+.nav-btn:hover{background:var(--gh-subtle);color:var(--gh-text);}
+.nav-btn.active{background:var(--gh-accent-bg);border-color:var(--gh-accent);color:var(--gh-accent);}
+
+/* MAIN CONTAINER */
+.container{max-width:1200px;width:100%;margin:0 auto;padding:24px;display:grid;grid-template-columns:1fr 320px;gap:24px;}
+@media(max-width:900px){.container{grid-template-columns:1fr;}}
+
+/* DASHBOARD STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:16px;margin-bottom:24px;}
+.stat-card{background:#fff;border:1px solid var(--gh-border);border-radius:8px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,0.02);}
+.stat-card .lbl{font-size:11px;font-weight:700;color:var(--gh-text-2);text-transform:uppercase;letter-spacing:0.5px;}
+.stat-card .val{font-size:24px;font-weight:800;margin-top:4px;color:var(--gh-text);}
+.stat-card.done .val{color:var(--gh-green);}
+.stat-card.pending .val{color:var(--gh-orange);}
+
+/* QUESTION BANK FORM */
+.qb-box{background:#fff;border:1px solid var(--gh-border);border-radius:8px;padding:20px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,0.02);}
+.box-title{font-size:16px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.qb-form{display:flex;gap:12px;flex-wrap:wrap;}
+.qb-input{flex:1;min-width:200px;padding:8px 12px;border:1px solid var(--gh-border);border-radius:6px;outline:none;font-size:14px;}
+.qb-input:focus{border-color:var(--gh-accent);box-shadow:0 0 0 3px rgba(9,105,218,.1);}
+.qb-select{padding:8px 12px;border:1px solid var(--gh-border);border-radius:6px;background:#fff;font-weight:600;font-size:13px;cursor:pointer;outline:none;}
+
+/* BUTTONS */
+.btn{padding:8px 16px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid;transition:0.15s;white-space:nowrap;}
+.btn.purple{background:#8250df;border-color:rgba(27,31,35,0.15);color:#fff;}
+.btn.purple:hover{background:#723bda;}
+
+/* QUESTION ITEMS LIST */
+.question-list{background:#fff;border:1px solid var(--gh-border);border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.02);}
+.list-hdr{background:var(--gh-subtle);padding:12px 16px;font-weight:700;font-size:13px;border-bottom:1px solid var(--gh-border);display:flex;justify-content:space-between;align-items:center;}
+.qb-item{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-bottom:1px solid var(--gh-border-muted);transition:0.1s;}
+.qb-item:last-child{border-bottom:none;}
+.qb-item:hover{background:var(--gh-subtle);}
+.qb-chk{width:18px;height:18px;margin-top:2px;cursor:pointer;accent-color:var(--gh-green);}
+.qb-content{flex:1;}
+.qb-text{font-size:14px;font-weight:600;color:var(--gh-text);line-height:1.4;}
+.qb-text.done-text{text-decoration:line-through;color:var(--gh-text-3);font-weight:400;}
+.qb-meta{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;}
+.badge{padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;border:1px solid;}
+.badge.cat-A{color:var(--gh-red);background:var(--gh-red-bg);border-color:#f1aeb5;}
+.badge.cat-B{color:var(--gh-orange);background:var(--gh-orange-bg);border-color:#d4a72c;}
+.badge.cat-C{color:var(--gh-green);background:var(--gh-green-bg);border-color:#82e396;}
+.badge.source{color:var(--gh-text-2);background:var(--gh-subtle);border-color:var(--gh-border);}
+.badge.ch{color:var(--gh-accent);background:var(--gh-accent-bg);border-color:#bee3f8;}
+.qb-del{background:none;border:none;color:var(--gh-red);cursor:pointer;font-size:16px;opacity:0.5;padding:2px 6px;transition:0.2s;}
+.qb-del:hover{opacity:1;background:var(--gh-red-bg);border-radius:4px;}
+
+/* SIDEBAR REVISION TRACKER */
+.side-box{background:#fff;border:1px solid var(--gh-border);border-radius:8px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,0.02);position:sticky;top:24px;}
+.filter-title{font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gh-sidebar-muted);letter-spacing:0.5px;margin-bottom:10px;margin-top:16px;}
+.filter-title:first-child{margin-top:0;}
+.filter-select{width:100%;padding:8px;border:1px solid var(--gh-border);border-radius:6px;font-size:13px;outline:none;background:#fff;}
+.empty-msg{padding:30px;text-align:center;color:var(--gh-text-3);font-size:13px;}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <a href="index.html" class="hdr-logo">
+    <div class="dot">📚</div>
+    CA Inter &nbsp;<span class="repo">/ Advanced Accounting</span>
+  </a>
+  <div class="hdr-right">
+    <a href="index.html" class="nav-btn">📊 Main Planner</a>
+    <a href="qbank.html" class="nav-btn active">🎯 Dedicated Q-Bank</a>
+  </div>
+</header>
+
+<div class="container">
+  <div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="lbl">Total Questions</div><div class="val" id="statTotal">0</div></div>
+      <div class="stat-card done"><div class="lbl">Solved (Done)</div><div class="val" id="statSolved">0</div></div>
+      <div class="stat-card pending"><div class="lbl">Remaining</div><div class="val" id="statPending">0</div></div>
+      <div class="stat-card" style="border-left: 4px solid #8250df;"><div class="lbl">Category A Questions</div><div class="val" id="statCatA">0</div></div>
+    </div>
+
+    <div class="qb-box">
+      <div class="box-title">➕ Add Important / LDR Question</div>
+      <form class="qb-form" id="qForm" onsubmit="addQuestion(event)">
+        <input type="text" id="qText" class="qb-input" placeholder="e.g., AS 10 Compulsory Question 4 or Illustration 12..." required>
+        <input type="text" id="qSrc" class="qb-input" style="flex:0 0 150px; min-width:120px;" placeholder="Source (e.g. ICAI SM, RTP Nov 24)" required>
+        
+        <select id="qCh" class="qb-select">
+          <option value="Accounting Standards">Accounting Standards (AS)</option>
+          <option value="Buyback & Equity">Buyback & Equity Shares</option>
+          <option value="Amalgamation">Amalgamation of Companies</option>
+          <option value="Internal Reconstruction">Internal Reconstruction</option>
+          <option value="Liquidation">Liquidation of Companies</option>
+          <option value="Financial Statements">FS of Companies</option>
+          <option value="Branch Accounting">Branch Accounting</option>
+        </select>
+
+        <select id="qCat" class="qb-select">
+          <option value="A">🔴 Category A (Most Imp)</option>
+          <option value="B">🟡 Category B (Medium)</option>
+          <option value="C">🟢 Category C (Easy/Basic)</option>
+        </select>
+        
+        <button type="submit" class="btn purple">Add Question</button>
+      </form>
+    </div>
+
+    <div class="question-list">
+      <div class="list-hdr">
+        <span>Questions Repository</span>
+        <span id="itemsCount" style="color:var(--gh-text-2); font-weight:600;">0 items</span>
+      </div>
+      <div id="qListContainer"></div>
+    </div>
+  </div>
+
+  <div>
+    <div class="side-box">
+      <div class="box-title">⚡ Quick Filters</div>
+      
+      <div class="filter-title">Filter by Chapter</div>
+      <select id="fCh" class="filter-select" onchange="renderQuestions()">
+        <option value="all">All Chapters</option>
+        <option value="Accounting Standards">Accounting Standards (AS)</option>
+        <option value="Buyback & Equity">Buyback & Equity Shares</option>
+        <option value="Amalgamation">Amalgamation of Companies</option>
+        <option value="Internal Reconstruction">Internal Reconstruction</option>
+        <option value="Liquidation">Liquidation of Companies</option>
+        <option value="Financial Statements">FS of Companies</option>
+        <option value="Branch Accounting">Branch Accounting</option>
+      </select>
+
+      <div class="filter-title">Filter by Category</div>
+      <select id="fCat" class="filter-select" onchange="renderQuestions()">
+        <option value="all">All Categories</option>
+        <option value="A">Category A Only</option>
+        <option value="B">Category B Only</option>
+        <option value="C">Category C Only</option>
+      </select>
+
+      <div class="filter-title">Filter by Status</div>
+      <select id="fStatus" class="filter-select" onchange="renderQuestions()">
+        <option value="all">All Status</option>
+        <option value="todo">To-do</option>
+        <option value="done">Completed</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<script>
+let questions = [];
+
+// Load data from LocalStorage
+function loadData() {
+  const localData = localStorage.getItem('ca_inter_qbank');
+  if (localData) {
+    questions = JSON.parse(localData);
+  } else {
+    // Some sample high-yield items for start
+    questions = [
+      { id: 1, text: 'AS 14: Inter-company holdings elimination and calculation of Purchase Consideration', src: 'ICAI SM Q3', ch: 'Amalgamation', cat: 'A', done: false },
+      { id: 2, text: 'AS 10: Component accounting treatment and cost calculation for deferred payment', src: 'RTP May 24', ch: 'Accounting Standards', cat: 'A', done: true },
+      { id: 3, text: 'Internal Reconstruction: Preparation of Capital Reduction Account & Balance Sheet', src: 'Past Paper Nov 23', ch: 'Internal Reconstruction', cat: 'B', done: false }
+    ];
+    saveData();
+  }
+}
+
+function saveData() {
+  localStorage.setItem('ca_inter_qbank', JSON.stringify(questions));
+}
+
+function addQuestion(e) {
+  e.preventDefault();
+  const text = document.getElementById('qText').value.trim();
+  const src = document.getElementById('qSrc').value.trim();
+  const ch = document.getElementById('qCh').value;
+  const cat = document.getElementById('qCat').value;
+
+  if(!text || !src) return;
+
+  const newQ = {
+    id: Date.now(),
+    text: text,
+    src: src,
+    ch: ch,
+    cat: cat,
+    done: false
+  };
+
+  questions.unshift(newQ);
+  saveData();
+  renderQuestions();
+  
+  // Reset fields
+  document.getElementById('qText').value = '';
+  document.getElementById('qSrc').value = '';
+}
+
+function toggleQ(id) {
+  const q = questions.find(item => item.id === id);
+  if (q) {
+    q.done = !q.done;
+    saveData();
+    renderQuestions();
+  }
+}
+
+function deleteQ(id) {
+  if (confirm('Are you sure you want to remove this question?')) {
+    questions = questions.filter(item => item.id !== id);
+    saveData();
+    renderQuestions();
+  }
+}
+
+function updateStats() {
+  const total = questions.length;
+  const solved = questions.filter(q => q.done).length;
+  const pending = total - solved;
+  const catA = questions.filter(q => q.cat === 'A').length;
+
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statSolved').textContent = solved;
+  document.getElementById('statPending').textContent = pending;
+  document.getElementById('statCatA').textContent = catA;
+  document.getElementById('itemsCount').textContent = `${total} items`;
+}
+
+function renderQuestions() {
+  const fCh = document.getElementById('fCh').value;
+  const fCat = document.getElementById('fCat').value;
+  const fStatus = document.getElementById('fStatus').value;
+  const container = document.getElementById('qListContainer');
+  
+  updateStats();
+
+  let filtered = questions;
+
+  if (fCh !== 'all') filtered = filtered.filter(q => q.ch === fCh);
+  if (fCat !== 'all') filtered = filtered.filter(q => q.cat === fCat);
+  if (fStatus !== 'all') filtered = filtered.filter(q => fStatus === 'done' ? q.done : !q.done);
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<div class="empty-msg">No matching questions found. Add some above! ✨</div>`;
+    return;
+  }
+
+  container.innerHTML = filtered.map(q => `
+    <div class="qb-item">
+      <input type="checkbox" class="qb-chk" ${q.done ? 'checked' : ''} onclick="toggleQ(${q.id})">
+      <div class="qb-content">
+        <div class="qb-text ${q.done ? 'done-text' : ''}">${q.text}</div>
+        <div class="qb-meta">
+          <span class="badge ch">${q.ch}</span>
+          <span class="badge source">📋 ${q.src}</span>
+          <span class="badge cat-${q.cat}">Cat ${q.cat}</span>
+        </div>
+      </div>
+      <button class="qb-del" onclick="deleteQ(${q.id})" title="Delete item">🗑️</button>
+    </div>
+  `).join('');
+}
+
+// Initialize
+loadData();
+renderQuestions();
+</script>
+
+</body>
+</html>
