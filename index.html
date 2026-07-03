@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CA Inter — Advanced Accounting Planner (Cloud Sync)</title>
+<title>CA Inter — Advanced Accounting Planner</title>
 <style>
 :root {
   --gh-canvas: #ffffff;
-  --gh-subtle: #f8f9fa; 
+  --gh-subtle: #f8f9fa; /* Lighter, cleaner background */
   --gh-border: #d0d7de;
   --gh-border-muted: #e1e4e8;
-  --gh-header: #f8f9fa; 
-  --gh-sidebar: #ffffff; 
+  --gh-header: #f8f9fa; /* Light professional header */
+  --gh-sidebar: #ffffff; /* Clean white sidebar */
   --gh-sidebar-text: #24292f;
   --gh-sidebar-muted: #57606a;
   --gh-sidebar-border: #e1e4e8;
@@ -33,154 +33,1051 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;overflow:hidden;}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif;font-size:14px;background:var(--gh-subtle);color:var(--gh-text);display:flex;flex-direction:column;}
-.hdr{background:var(--gh-header);height:54px;display:flex;align-items:center;padding:0 24px;gap:16px;flex-shrink:0;border-bottom:1px solid var(--gh-border-muted);}
+
+/* ── HEADER ── */
+.hdr{background:var(--gh-header);height:54px;display:flex;align-items:center;padding:0 24px;gap:16px;flex-shrink:0;border-bottom:1px solid var(--gh-border-muted); box-shadow: 0 1px 3px rgba(0,0,0,0.02);}
 .hdr-logo{display:flex;align-items:center;gap:10px;color:var(--gh-text);font-weight:700;font-size:15px;}
-.hdr-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.hdr-logo .dot{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#0969da,#1a7f37);display:flex;align-items:center;justify-content:center;font-size:14px; color:#fff;}
+.hdr-logo .repo{color:var(--gh-text-2);font-weight:500;}
+.hdr-right{margin-left:auto;display:flex;align-items:center;gap:16px;}
+.hdr-prog{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--gh-text-2);}
+.hdr-prog-bar{width:120px;height:6px;background:var(--gh-border-muted);border-radius:3px;overflow:hidden;}
+.hdr-prog-fill{height:100%;background:#2da44e;border-radius:3px;transition:width .4s;}
+.hdr-pill{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--gh-border);color:var(--gh-text-2);background:#fff;}
+.hdr-date{font-size:13px;font-weight:600;color:var(--gh-text-2);display:flex;align-items:center;gap:8px;}
+.hdr-date input{background:#fff;border:1px solid var(--gh-border);border-radius:6px;color:var(--gh-text);padding:4px 8px;font-size:12px;font-weight:600;font-family:inherit;outline:none;}
+.streak-pill{background:linear-gradient(90deg, #ff9a44, #fc6076); border:none; color:#fff; box-shadow: 0 2px 8px rgba(252, 96, 118, 0.3);}
+
+/* ── LAYOUT & SIDEBAR ── */
 .body-wrap{flex:1;display:flex;overflow:hidden;}
 .sidebar{width:260px;background:var(--gh-sidebar);border-right:1px solid var(--gh-sidebar-border);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;}
+.sb-hdr{padding:14px 16px 10px;border-bottom:1px solid var(--gh-sidebar-border);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--gh-sidebar-muted);display:flex;align-items:center;justify-content:space-between;}
+.sb-search{padding:10px 14px;border-bottom:1px solid var(--gh-sidebar-border);}
+.sb-search input{width:100%;background:var(--gh-subtle);border:1px solid var(--gh-sidebar-border);border-radius:6px;padding:7px 10px;font-size:13px;color:var(--gh-text);outline:none;font-family:inherit;transition:all 0.2s;}
+.sb-search input:focus{border-color:var(--gh-accent); background:#fff; box-shadow:0 0 0 3px rgba(9,105,218,0.1);}
+.sb-scroll{flex:1;overflow-y:auto;padding:8px 0;}
+.sb-scroll::-webkit-scrollbar{width:5px;}
+.sb-scroll::-webkit-scrollbar-thumb{background:var(--gh-border);border-radius:3px;}
+.sb-group-lbl{padding:10px 16px 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--gh-sidebar-muted);}
+.sb-item{display:flex;align-items:center;gap:10px;padding:7px 14px;margin:2px 8px;border-radius:6px;cursor:pointer;border:1px solid transparent;transition:all .15s;}
+.sb-item:hover{background:var(--gh-subtle);}
+.sb-item.active{background:var(--gh-accent-bg);border-left:3px solid var(--gh-accent); border-radius: 4px 6px 6px 4px;}
+.sb-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.sb-dot.done{background:#2da44e;}
+.sb-dot.in-progress{background:var(--gh-accent);}
+.sb-dot.none{background:var(--gh-border);border:1px solid var(--gh-text-3);}
+.sb-dot.revision{background:var(--gh-purple);}
+.sb-text{flex:1;min-width:0;}
+.sb-name{font-size:13px;color:var(--gh-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4;}
+.sb-item.active .sb-name{color:var(--gh-accent);font-weight:700;}
+.sb-pct{font-size:11px;color:var(--gh-text-2);margin-top:2px;}
+.sb-mini-p{height:3px;background:var(--gh-border);border-radius:2px;margin-top:4px;}
+.sb-mini-f{height:100%;border-radius:2px;background:#2da44e;}
+.sb-badge{font-size:11px;font-weight:600;background:var(--gh-subtle);border:1px solid var(--gh-border);color:var(--gh-text-2);padding:2px 6px;border-radius:12px;flex-shrink:0;}
+.sb-divider{height:1px;background:var(--gh-sidebar-border);margin:8px 16px;}
+.sb-footer{border-top:1px solid var(--gh-sidebar-border);padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.sb-stat{text-align:center;}
+.sb-stat .v{font-size:18px;font-weight:800;color:var(--gh-text);}
+.sb-stat .l{font-size:10px;font-weight:600;color:var(--gh-text-2);text-transform:uppercase;letter-spacing:.5px;}
+
+/* ── MAIN ── */
 .main{flex:1;display:flex;overflow:hidden;}
 .content{flex:1;overflow-y:auto;background:var(--gh-subtle);}
-.sync-btn {background:#0969da; color:#fff; padding:6px 12px; border:none; border-radius:6px; cursor:pointer; font-weight:600; font-size:12px;}
-.refresh-btn {background:#24292f; color:#fff;}
-.share-btn {background:#2da44e; color:#fff;}
+.content::-webkit-scrollbar{width:8px;}
+.content::-webkit-scrollbar-thumb{background:var(--gh-border);border-radius:4px;}
+
+/* chapter header */
+.ch-hdr{background:var(--gh-canvas);border-bottom:1px solid var(--gh-border);padding:24px 30px;}
+.ch-hdr-row{display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;}
+.ch-icon{width:48px;height:48px;border-radius:10px;border:1px solid var(--gh-border);background:var(--gh-subtle);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
+.ch-info{flex:1;min-width:0;}
+.ch-crumb{font-size:12px;font-weight:500;color:var(--gh-text-2);margin-bottom:4px;}
+.ch-title{font-size:20px;font-weight:700;line-height:1.3;}
+.ch-desc{font-size:13px;color:var(--gh-text-2);margin-top:4px;}
+.ch-labels{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
+.lbl{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;border:1px solid;}
+.lbl.marks{color:var(--gh-orange);border-color:#d4a72c;background:var(--gh-orange-bg);}
+.lbl.hard{color:var(--gh-red);border-color:#f1aeb5;background:var(--gh-red-bg);}
+.lbl.medium{color:var(--gh-orange);border-color:#d4a72c;background:var(--gh-orange-bg);}
+.lbl.easy{color:var(--gh-green);border-color:#82e396;background:var(--gh-green-bg);}
+.lbl.accent{color:var(--gh-accent);border-color:#79c0ff;background:var(--gh-accent-bg);}
+.lbl.purple{color:var(--gh-purple);border-color:#d2b4fd;background:var(--gh-purple-bg);}
+.ch-acts{display:flex;gap:8px;flex-shrink:0;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;border:1px solid;transition:all .2s;font-family:inherit;white-space:nowrap;}
+.btn.def{background:var(--gh-canvas);border-color:var(--gh-border);color:var(--gh-text);box-shadow:0 1px 2px rgba(0,0,0,0.03);}
+.btn.def:hover{background:var(--gh-subtle);border-color:var(--gh-text-3);}
+.btn.green{background:#2da44e;border-color:rgba(31,35,40,.15);color:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);}
+.btn.green:hover{background:#2c974b;}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--gh-text-2);}
+.btn.ghost:hover{background:var(--gh-border-muted);color:var(--gh-text);}
+.ch-prog{height:6px;background:var(--gh-border-muted);margin-top:16px;border-radius:3px;overflow:hidden;}
+.ch-prog-fill{height:100%;background:#2da44e;border-radius:3px;transition:width .4s;}
+
+/* tabs */
+.tabs{background:var(--gh-canvas);border-bottom:1px solid var(--gh-border);padding:0 30px;display:flex;}
+.tab-btn{padding:14px 18px;font-size:14px;font-weight:600;border:none;background:transparent;cursor:pointer;color:var(--gh-text-2);border-bottom:3px solid transparent;margin-bottom:-1px;display:flex;align-items:center;gap:6px;font-family:inherit;transition:all .2s;}
+.tab-btn:hover{color:var(--gh-text);}
+.tab-btn.active{color:var(--gh-accent);border-bottom-color:var(--gh-accent);}
+.tc{background:var(--gh-border-muted);color:var(--gh-text);padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;}
+.tab-btn.active .tc{background:var(--gh-accent-bg);color:var(--gh-accent);}
+
+/* table */
+.tw{padding:24px 30px;}
+.gh-tbl{width:100%;border-collapse:separate; border-spacing:0; border:1px solid var(--gh-border);border-radius:8px;overflow:hidden;background:var(--gh-canvas);box-shadow:0 1px 3px rgba(27,31,35,0.04);}
+.gh-tbl thead th{background:var(--gh-subtle);padding:10px 14px;font-size:12px;font-weight:700;color:var(--gh-text-2);text-align:left;border-bottom:1px solid var(--gh-border);}
+.gh-tbl tbody tr{transition:background .1s;}
+.gh-tbl tbody tr td{border-bottom:1px solid var(--gh-border-muted);}
+.gh-tbl tbody tr:last-child td{border-bottom:none;}
+.gh-tbl tbody tr:hover{background:var(--gh-subtle);}
+.gh-tbl td{padding:12px 14px;font-size:13px;vertical-align:middle;}
+.topic-cell{display:flex;align-items:flex-start;gap:12px;}
+.t-circle{width:20px;height:20px;border-radius:50%;border:2px solid;flex-shrink:0;margin-top:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;transition:all .2s;}
+.t-circle.none{border-color:var(--gh-border);background:var(--gh-subtle);color:transparent;}
+.t-circle.in-progress{border-color:var(--gh-accent);background:var(--gh-accent-bg);color:var(--gh-accent);}
+.t-circle.done{border-color:#2da44e;background:#2da44e;color:#fff;}
+.t-circle.revision{border-color:var(--gh-purple);background:var(--gh-purple-bg);color:var(--gh-purple);}
+.t-info{flex:1;}
+.t-name{font-weight:600;color:var(--gh-text);line-height:1.4;font-size:14px;}
+.t-name.done-text{text-decoration:line-through;color:var(--gh-text-3);}
+.t-sub{font-size:12px;color:var(--gh-text-2);margin-top:4px;line-height:1.5;}
+.as-chip{font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;font-size:11px;font-weight:700;color:var(--gh-accent);background:var(--gh-accent-bg);padding:2px 6px;border-radius:4px;border:1px solid #bee3f8;white-space:nowrap;}
+.p-dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
+.p-dot.high{background:var(--gh-red);}
+.p-dot.medium{background:var(--gh-orange);}
+.p-dot.low{background:var(--gh-green);}
+.st-sel{border:1px solid var(--gh-border);border-radius:6px;padding:4px 8px;font-size:12px;font-weight:600;font-family:inherit;background:var(--gh-canvas);color:var(--gh-text);cursor:pointer;outline:none;}
+.st-sel:focus{border-color:var(--gh-accent);box-shadow:0 0 0 3px rgba(9,105,218,.1);}
+.star-b{background:none;border:none;cursor:pointer;font-size:16px;color:var(--gh-border);padding:2px 4px;border-radius:4px;transition:all .2s;}
+.star-b.on{color:#d4a72c; text-shadow: 0 0 4px rgba(212, 167, 44, 0.4);}
+.star-b:hover{background:var(--gh-border-muted);}
+
+/* notes */
+.notes-wrap{padding:24px 30px;}
+.notes-ta{width:100%;min-height:250px;border:1px solid var(--gh-border);border-radius:8px;padding:16px;font-size:14px;font-family:inherit;color:var(--gh-text);background:var(--gh-canvas);resize:vertical;outline:none;line-height:1.7;box-shadow:0 1px 3px rgba(27,31,35,0.04);}
+.notes-ta:focus{border-color:var(--gh-accent);box-shadow:0 0 0 3px rgba(9,105,218,.1);}
+.mnemonic-box{background:var(--gh-canvas);border:1px solid var(--gh-border);border-left:4px solid var(--gh-accent);border-radius:4px 8px 8px 4px;padding:12px 16px;font-size:13px;color:var(--gh-text-2);margin-top:12px;box-shadow:0 1px 2px rgba(0,0,0,0.02);}
+.mnemonic-box strong{color:var(--gh-text);display:block;margin-bottom:4px;font-size:13px;font-weight:700;}
+
+/* practice */
+.pq-wrap{padding:24px 30px;}
+.pq-item{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border:1px solid var(--gh-border);border-radius:8px;margin-bottom:12px;background:var(--gh-canvas);box-shadow:0 1px 2px rgba(0,0,0,0.02);}
+.pq-num{width:26px;height:26px;border-radius:50%;background:var(--gh-subtle);border:1px solid var(--gh-border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--gh-text-2);flex-shrink:0;}
+.pq-text{flex:1;font-size:14px;line-height:1.5;}
+.pq-btn{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid;transition:all .2s;font-family:inherit;white-space:nowrap;}
+.pq-btn.todo{background:var(--gh-canvas);border-color:var(--gh-border);color:var(--gh-text-2);}
+.pq-btn.done{background:var(--gh-green-bg);border-color:#82e396;color:var(--gh-green);}
+.pq-tip{background:#fffbdd;border:1px solid #d4a72c;border-radius:8px;padding:14px 16px;font-size:13px;color:#5a4000;margin-top:16px;line-height:1.5;}
+
+/* Q-Bank Custom Styles */
+.qb-form { display: flex; gap: 10px; margin-bottom: 20px; background: var(--gh-canvas); padding: 16px; border: 1px solid var(--gh-border); border-radius: 8px; flex-wrap: wrap; align-items: center; box-shadow:0 1px 3px rgba(0,0,0,0.03);}
+.qb-input { flex: 1; min-width: 250px; padding: 8px 12px; border: 1px solid var(--gh-border); border-radius: 6px; background: #fff; color: var(--gh-text); outline: none; font-family: inherit; font-size: 14px; }
+.qb-input:focus { border-color: var(--gh-accent); box-shadow: 0 0 0 3px rgba(9,105,218,.1); }
+.qb-select { padding: 8px 10px; border: 1px solid var(--gh-border); border-radius: 6px; background: #fff; color: var(--gh-text); outline: none; font-size: 13px; font-weight:600; font-family: inherit; cursor:pointer;}
+.qb-cat-A { color: var(--gh-red); background: var(--gh-red-bg); border-color: #f1aeb5; }
+.qb-cat-B { color: var(--gh-orange); background: var(--gh-orange-bg); border-color: #d4a72c; }
+.qb-cat-C { color: var(--gh-green); background: var(--gh-green-bg); border-color: #82e396; }
+.qb-src { font-family: "SFMono-Regular",Consolas,monospace; font-size: 11px; font-weight:700; padding: 3px 8px; border-radius: 4px; background: var(--gh-subtle); color: var(--gh-text-2); border: 1px solid var(--gh-border); white-space: nowrap;}
+.qb-item { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--gh-border-muted); transition: background 0.1s;}
+.qb-item:hover { background: var(--gh-subtle); }
+.qb-item:last-child { border-bottom: none; }
+.qb-chk { cursor: pointer; width: 18px; height: 18px; margin-top: 2px; accent-color: #2da44e; }
+.qb-text { flex: 1; font-size: 14px; line-height: 1.5; color: var(--gh-text); font-weight:500;}
+.qb-text.done { text-decoration: line-through; color: var(--gh-text-3); font-weight:400;}
+.qb-del { background: none; border: none; color: var(--gh-red); cursor: pointer; font-size: 16px; opacity: 0.5; transition: 0.2s; padding: 0 6px;}
+.qb-del:hover { opacity: 1; background: var(--gh-red-bg); border-radius:4px;}
+
+/* overview cards */
+.ov-card{background:var(--gh-canvas);border:1px solid var(--gh-border);border-radius:10px;padding:18px;cursor:pointer;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
+.ov-card:hover{border-color:var(--gh-accent);box-shadow:0 4px 12px rgba(9,105,218,.08); transform: translateY(-2px);}
+.ov-top{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.ov-icon{font-size:22px;}
+.ov-name{font-size:14px;font-weight:700;flex:1;}
+.ov-sub{font-size:12px;color:var(--gh-text-3);font-weight:500;margin-top:2px;}
+.ov-pct{font-size:15px;font-weight:800;}
+.ov-bar{height:8px;background:var(--gh-border-muted);border-radius:4px;margin-bottom:12px;}
+.ov-fill{height:100%;border-radius:4px;transition:width .4s;}
+.ov-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--gh-text-2); font-weight:600;}
+
+/* ── RIGHT PANEL ── */
+.rpanel{width:280px;border-left:1px solid var(--gh-border);background:var(--gh-canvas);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;box-shadow:-1px 0 5px rgba(0,0,0,0.02);}
+.rpanel::-webkit-scrollbar{width:5px;}
+.rpanel::-webkit-scrollbar-thumb{background:var(--gh-border);border-radius:3px;}
+.rp-sec{border-bottom:1px solid var(--gh-border-muted);padding:20px;}
+.rp-lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--gh-text-2);margin-bottom:14px;}
+
+/* timer */
+.tm-mode{display:flex;gap:6px;margin-bottom:14px;}
+.tm-mode-btn{flex:1;padding:6px;font-size:12px;font-weight:700;border:1px solid var(--gh-border);border-radius:6px;background:var(--gh-subtle);cursor:pointer;color:var(--gh-text-2);transition:all .15s;font-family:inherit;}
+.tm-mode-btn.active{background:var(--gh-text);color:#fff;border-color:var(--gh-text);}
+.tm-disp{text-align:center;padding:10px 0 16px;}
+.tm-time{font-size:48px;font-weight:300;letter-spacing:-1px;font-variant-numeric:tabular-nums;font-family:"SFMono-Regular",Consolas,monospace;color:var(--gh-text);}
+.tm-sub{font-size:12px;font-weight:600;color:var(--gh-text-3);margin-top:4px;min-height:16px;}
+.tm-btns{display:flex;gap:8px;}
+.tm-btns button{flex:1;padding:8px;border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s;}
+
+/* stats grid */
+.stat-g{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.stat-b{background:var(--gh-canvas);border:1px solid var(--gh-border);border-radius:8px;padding:12px;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,0.02);}
+.stat-b .v{font-size:22px;font-weight:800;}
+.stat-b .l{font-size:11px;font-weight:600;color:var(--gh-text-2);margin-top:2px;text-transform:uppercase;letter-spacing:0.5px;}
+.stat-b.green .v{color:var(--gh-green);}
+.stat-b.blue .v{color:var(--gh-accent);}
+.stat-b.orange .v{color:var(--gh-orange);}
+.stat-b.purple .v{color:var(--gh-purple);}
+
+/* log */
+.log-row{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:500;padding:8px 0;border-bottom:1px solid var(--gh-border-muted);}
+.log-row:last-child{border-bottom:none;}
+.log-dot{width:6px;height:6px;border-radius:50%;background:#2da44e;flex-shrink:0;}
+.log-txt{flex:1;color:var(--gh-text);}
+.log-t{color:var(--gh-text-3);white-space:nowrap;font-size:11px;}
+.empty-log{font-size:13px;color:var(--gh-text-3);text-align:center;padding:20px 0;}
+
+/* toast */
+.toast{position:fixed;bottom:24px;right:24px;background:#24292f;color:#fff;padding:12px 20px;border-radius:8px;font-size:14px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.15);z-index:999;transform:translateY(50px);opacity:0;transition:all .3s cubic-bezier(.175,.885,.32,1.275);}
+.toast.show{transform:translateY(0);opacity:1;}
+
+@media(max-width:1100px){.rpanel{display:none;}}
+@media(max-width:700px){.sidebar{width:220px;}}
 </style>
 </head>
 <body>
 
 <header class="hdr">
-  <div class="hdr-logo">📊 CA Inter / Advanced Accounting</div>
+  <div class="hdr-logo">
+    <div class="dot">📊</div>
+    CA Inter &nbsp;<span class="repo">/ Advanced Accounting</span>
+  </div>
   <div class="hdr-right">
-    <!-- क्लाउड सिंक और रिफ्रेश बटन्स -->
-    <button class="sync-btn refresh-btn" onclick="refreshData()">🔄 Refresh</button>
-    <button class="sync-btn" onclick="saveToCloud()">☁️ Save Permanent</button>
-    <button class="sync-btn share-btn" onclick="shareLink()">🔗 Copy Share Link</button>
+    <div class="hdr-pill streak-pill" id="streakCounter" title="Daily Study Streak">🔥 0</div>
+    <div class="hdr-date">
+      <span>Exam:</span>
+      <input type="date" id="examDate" onchange="updateCountdown()" title="Set exam date">
+      <span id="countdown" style="color:var(--gh-text);font-weight:700;"></span>
+    </div>
+    <div class="hdr-prog">
+      <span id="hdrPct">0%</span>
+      <div class="hdr-prog-bar"><div class="hdr-prog-fill" id="hdrBar" style="width:0%"></div></div>
+      <span id="hdrFrac" style="font-size:11px;">0/0</span>
+    </div>
+    <div class="hdr-pill" style="border-color:var(--gh-accent); color:var(--gh-accent); background:var(--gh-accent-bg);">New Syllabus 2024</div>
+    <a href="qbank.html" class="hdr-pill" style="text-decoration:none; background:#8250df; color:#fff; border:none; box-shadow: 0 2px 4px rgba(130, 80, 223, 0.3); cursor:pointer;">🎯 Go to Q-Bank</a>
   </div>
 </header>
 
 <div class="body-wrap">
+
   <aside class="sidebar">
-    <div style="padding:15px; font-weight:bold; border-bottom:1px solid var(--gh-border-muted);">Cloud Sync Active</div>
-    <div id="cloudStatus" style="padding:10px 15px; color:var(--gh-text-2); font-size:12px;">चेक किया जा रहा है...</div>
-    <div id="sbScroll" style="padding:10px;"></div>
+    <div class="sb-hdr">
+      <span>Chapters &amp; AS</span>
+      <span id="sbProgress" style="font-size:10px;"></span>
+    </div>
+    <div class="sb-search"><input type="text" placeholder="Filter topics…" id="sbFilter" oninput="filterSidebar(this.value)"></div>
+    <div class="sb-scroll" id="sbScroll"></div>
+    <div class="sb-footer">
+      <div class="sb-stat"><div class="v" id="sbDone">0</div><div class="l">Done</div></div>
+      <div class="sb-stat"><div class="v" id="sbTotal">0</div><div class="l">Total</div></div>
+      <div class="sb-stat"><div class="v" id="sbHours">0h</div><div class="l">Studied</div></div>
+      <div class="sb-stat"><div class="v" id="sbDays">—</div><div class="l">Days left</div></div>
+    </div>
   </aside>
+
   <main class="main">
-    <div class="content" id="mainContent">
-      <div style="padding:30px;">
-        <h2>Permanent Cloud Storage Enabled 🌍</h2>
-        <p style="color:var(--gh-text-2); margin-top:10px;">अब आपका डेटा किसी भी डिवाइस पर खुल सकता है। बस नीचे दिए गए स्टेप्स को फॉलो करें:</p>
-        
-        <div style="background:var(--gh-accent-bg); padding:15px; border-radius:6px; margin-top:15px; border:1px solid var(--gh-border);">
-          <strong>कैसे इस्तेमाल करें:</strong>
-          <ul style="margin-left:20px; margin-top:5px; line-height:1.6;">
-            <li>कुछ भी बदलाव करने के बाद <strong>☁️ Save Permanent</strong> बटन दबाएं।</li>
-            <li>इसके बाद <strong>🔗 Copy Share Link</strong> बटन दबाकर अपनी जादुई लिंक कॉपी कर लें।</li>
-            <li>इस लिंक को आप अपने व्हाट्सएप या किसी भी डिवाइस पर ओपन करेंगे, तो आपका पूरा डेटा वहां खुल जाएगा!</li>
-            <li>दूसरे डिवाइस पर नया डेटा देखने के लिए बस <strong>🔄 Refresh</strong> बटन दबाएं।</li>
-          </ul>
+    <div class="content" id="mainContent"></div>
+  </main>
+
+  <aside class="rpanel">
+    <div class="rp-sec">
+      <div class="rp-lbl">Study Timer</div>
+      <div class="tm-mode">
+        <button class="tm-mode-btn active" onclick="setTimerMode('pomo',this)">Pomodoro</button>
+        <button class="tm-mode-btn" onclick="setTimerMode('short',this)">5 min</button>
+        <button class="tm-mode-btn" onclick="setTimerMode('long',this)">45 min</button>
+      </div>
+      <div class="tm-disp">
+        <div class="tm-time" id="tmDisplay">25:00</div>
+        <div class="tm-sub" id="tmSub">Ready to study</div>
+      </div>
+      <div class="tm-btns">
+        <button class="btn ghost" onclick="resetTimer()" title="Reset">↺</button>
+        <button class="btn green" id="tmBtn" onclick="toggleTimer()">▶ Start</button>
+        <button class="btn def" onclick="logSession()" title="Log session">✓ Log</button>
+      </div>
+    </div>
+    <div class="rp-sec">
+      <div class="rp-lbl">Progress</div>
+      <div class="stat-g">
+        <div class="stat-b green"><div class="v" id="rsDone">0</div><div class="l">Done</div></div>
+        <div class="stat-b blue"><div class="v" id="rsTotal">0</div><div class="l">Topics</div></div>
+        <div class="stat-b orange"><div class="v" id="rsHours">0h</div><div class="l">Studied</div></div>
+        <div class="stat-b purple"><div class="v" id="rsRevision">0</div><div class="l">Revision</div></div>
+      </div>
+    </div>
+    <div class="rp-sec" style="flex:1">
+      <div class="rp-lbl" style="display:flex;align-items:center;justify-content:space-between;">
+        Study Log <button onclick="clearLog()" style="font-size:11px;color:var(--gh-text-3);background:none;border:none;cursor:pointer;font-weight:600;">Clear</button>
+      </div>
+      <div id="logList"><div class="empty-log">No sessions yet</div></div>
+    </div>
+  </aside>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── SYLLABUS DATA ──────────────────────────────────────────────────────────
+const syllabus = [
+  {
+    id: 'as-fw', type: 'section', label: 'Sec. A', icon: '📐',
+    title: 'AS Framework & Formulation',
+    desc: 'Foundational concepts, Ind AS vs IFRS, applicability',
+    difficulty: 'medium', marks: '5–8',
+    topics: [
+      { id: 'fw1', name: 'Process of Formulation of Accounting Standards', sub: 'Ind AS (IFRS converged), IFRSs, role of ICAI & MCA', priority: 'medium' },
+      { id: 'fw2', name: 'Convergence vs Adoption of IFRS', sub: 'Differences, carve-outs — objective and concepts', priority: 'medium' },
+      { id: 'fw3', name: 'Framework for Preparation & Presentation of Financial Statements', sub: 'Objective, qualitative characteristics, elements of FS', priority: 'high' },
+      { id: 'fw4', name: 'Applicability of AS to Various Entities', sub: 'Level I / II / III companies, relaxations available', priority: 'high' },
+    ],
+    practiceQs: [
+      'Distinguish between convergence and adoption of IFRS with examples',
+      'Explain qualitative characteristics of financial statements per AS Framework',
+      'Which entities are Level I under Accounting Standards? List exemptions for Level II',
+    ],
+    mnemonics: [
+      { key: 'Convergence vs Adoption', tip: 'Convergence = adapt IFRS (keep some carve-outs). Adoption = copy exactly.' },
+      { key: 'Qualitative characteristics', tip: 'RUFC — Relevance, Understandability, Faithfulness, Comparability' },
+    ]
+  },
+  {
+    id: 'as-1-10', type: 'section', label: 'Sec. B', icon: '📋',
+    title: 'Accounting Standards — AS 1 to AS 10',
+    desc: 'Disclosure, Inventories, CFS, Contingencies, Revenue, PPE',
+    difficulty: 'hard', marks: '15–20',
+    topics: [
+      { id: 'as1', code: 'AS 1', name: 'Disclosure of Accounting Policies', sub: 'Fundamental assumptions, consistency, disclosure requirements', priority: 'high' },
+      { id: 'as2', code: 'AS 2', name: 'Valuation of Inventories', sub: 'Cost formulas — FIFO & WA; NRV, cost of inventories, techniques', priority: 'high' },
+      { id: 'as3', code: 'AS 3', name: 'Cash Flow Statements', sub: 'Operating (direct & indirect), investing, financing; special items', priority: 'high' },
+      { id: 'as4', code: 'AS 4', name: 'Contingencies & Events After Balance Sheet Date', sub: 'Adjusting vs non-adjusting events, disclosure', priority: 'medium' },
+      { id: 'as5', code: 'AS 5', name: 'Net Profit/Loss, Prior Period Items & Changes in Accounting Policies', sub: 'Ordinary activities, extraordinary items, estimates vs policy change', priority: 'medium' },
+      { id: 'as7', code: 'AS 7', name: 'Construction Contracts', sub: 'Percentage completion method; recognition of revenue and costs', priority: 'high' },
+      { id: 'as9', code: 'AS 9', name: 'Revenue Recognition', sub: 'Timing — sale of goods, rendering of services, interest/dividends', priority: 'high' },
+      { id: 'as10', code: 'AS 10', name: 'Property, Plant and Equipment', sub: 'Recognition, cost model, depreciation, component accounting, derecognition', priority: 'high' },
+    ],
+    practiceQs: [
+      'AS 2: Calculate closing inventory under FIFO and Weighted Average methods',
+      'AS 3: Prepare Cash Flow Statement (indirect method) from given Balance Sheets',
+      'AS 7: Compute revenue, costs and profit for a construction contract (% completion)',
+      'AS 9: When should revenue from services be recognised? Explain with examples',
+      'AS 10: Calculate carrying amount; journal entries for partial disposal of PPE',
+    ],
+    mnemonics: [
+      { key: 'AS 2 — Not LIFO!', tip: 'ICAI AS 2 allows only FIFO and Weighted Average. LIFO is NOT permitted.' },
+      { key: 'AS 3 OIF', tip: 'Operating → Investing → Financing. Salaries = O; Buy Machine = I; Issue Shares = F' },
+      { key: 'AS 9 — Risks & Rewards', tip: 'Revenue from goods = transfer of significant risks & rewards to buyer' },
+    ]
+  },
+  {
+    id: 'as-11-20', type: 'section', label: 'Sec. B', icon: '📋',
+    title: 'Accounting Standards — AS 11 to AS 20',
+    desc: 'Forex, Grants, Investments, Employee Benefits, Borrowing Costs, Leases, EPS',
+    difficulty: 'hard', marks: '15–20',
+    topics: [
+      { id: 'as11', code: 'AS 11', name: 'Effects of Changes in Foreign Exchange Rates', sub: 'Monetary vs non-monetary items, closing rate, exchange differences in P&L', priority: 'high' },
+      { id: 'as12', code: 'AS 12', name: 'Accounting for Government Grants', sub: 'Capital approach vs income approach; deferred grant income; repayment', priority: 'medium' },
+      { id: 'as13', code: 'AS 13', name: 'Accounting for Investments', sub: 'Current vs long-term; cost/market method; carrying amount on disposal', priority: 'medium' },
+      { id: 'as14', code: 'AS 14', name: 'Accounting for Amalgamations', sub: 'Merger vs purchase method; excluding inter-company holdings', priority: 'high' },
+      { id: 'as15', code: 'AS 15', name: 'Employee Benefits', sub: 'Short-term, post-employment — defined benefit (PBO) vs defined contribution', priority: 'medium' },
+      { id: 'as16', code: 'AS 16', name: 'Borrowing Costs', sub: 'Qualifying assets; capitalization rate; commencement/suspension/cessation', priority: 'high' },
+      { id: 'as17', code: 'AS 17', name: 'Segment Reporting', sub: 'Business vs geographical; reportable segments (10% & 75% tests)', priority: 'medium' },
+      { id: 'as18', code: 'AS 18', name: 'Related Party Disclosures', sub: 'Definition of related party; types of transactions; disclosure requirements', priority: 'medium' },
+      { id: 'as19', code: 'AS 19', name: 'Leases', sub: 'Finance vs operating; lessee/lessor accounting; sale & leaseback', priority: 'high' },
+      { id: 'as20', code: 'AS 20', name: 'Earnings Per Share', sub: 'Basic EPS formula; weighted average shares; diluted EPS — dilutive securities', priority: 'medium' },
+    ],
+    practiceQs: [
+      'AS 11: Translate foreign currency transactions; compute exchange difference',
+      'AS 16: Calculate borrowing cost eligible for capitalisation from given data',
+      'AS 19: Classify lease as finance/operating; prepare ledger in lessee books',
+      'AS 20: Compute basic and diluted EPS with bonus issue and rights issue adjustments',
+      'AS 14: Compute goodwill / capital reserve under purchase method',
+    ],
+    mnemonics: [
+      { key: 'AS 11 Monetary items', tip: 'Monetary = cash, debtors, creditors, loans → retranslate at closing rate' },
+      { key: 'AS 16 — Stop capitalizing when', tip: '"Substantially all activities necessary to prepare the asset for intended use are complete"' },
+      { key: 'AS 20 Basic EPS', tip: 'Profit available to equity ÷ Weighted average equity shares outstanding' },
+    ]
+  },
+  {
+    id: 'as-21-29', type: 'section', label: 'Sec. B', icon: '📋',
+    title: 'Accounting Standards — AS 21 to AS 29',
+    desc: 'CFS, Deferred Tax, Associates, Impairment, Intangibles, Provisions',
+    difficulty: 'hard', marks: '15–20',
+    topics: [
+      { id: 'as21', code: 'AS 21', name: 'Consolidated Financial Statements', sub: 'Single subsidiaries only (excl. different dates, cross-holding, disposal, foreign subs)', priority: 'high' },
+      { id: 'as22', code: 'AS 22', name: 'Accounting for Taxes on Income', sub: 'Current tax; deferred tax asset/liability; timing differences; unrecognised DTA', priority: 'high' },
+      { id: 'as23', code: 'AS 23', name: 'Investment in Associates — CFS', sub: 'Equity method; significant influence (20%+); goodwill in associate', priority: 'high' },
+      { id: 'as24', code: 'AS 24', name: 'Discontinuing Operations', sub: 'Initial disclosure event; P&L and B/S disclosures; definition', priority: 'low' },
+      { id: 'as25', code: 'AS 25', name: 'Interim Financial Reporting', sub: 'Minimum content; recognition and measurement principles for interim periods', priority: 'low' },
+      { id: 'as26', code: 'AS 26', name: 'Intangible Assets', sub: 'Recognition criteria; internally generated (research vs development); amortisation', priority: 'high' },
+      { id: 'as27', code: 'AS 27', name: 'Financial Reporting — Interests in Joint Ventures', sub: 'JCO, JCA, JCE; proportionate consolidation; equity method alternative', priority: 'medium' },
+      { id: 'as28', code: 'AS 28', name: 'Impairment of Assets', sub: 'Recoverable amount; value in use; CGU; goodwill impairment; reversal', priority: 'high' },
+      { id: 'as29', code: 'AS 29', name: 'Provisions, Contingent Liabilities & Contingent Assets', sub: 'Recognition criteria; best estimate; discount; onerous contracts', priority: 'high' },
+    ],
+    practiceQs: [
+      'AS 21: Prepare Consolidated Balance Sheet (eliminate unrealised profit in stock)',
+      'AS 22: Compute deferred tax asset/liability from timing differences table',
+      'AS 23: Apply equity method — share of associate profits, goodwill calculation',
+      'AS 26: Distinguish research costs vs development costs; when to capitalise?',
+      'AS 28: Compute recoverable amount; identify impairment loss and allocation in CGU',
+      'AS 29: When is a provision recognised? Distinguish from contingent liability',
+    ],
+    mnemonics: [
+      { key: 'AS 22 — DTA vs DTL', tip: 'DTA = pay more tax now (future saving). DTL = pay less tax now (pay more later).' },
+      { key: 'AS 26 — Research Phase', tip: 'Research = always expense. Development = capitalise if 6 criteria met (PIRATE mnemonic).' },
+      { key: 'AS 28 Recoverable Amount', tip: 'RA = Higher of (Fair Value less costs to sell) and (Value in Use)' },
+    ]
+  },
+  {
+    id: 'ch10', type: 'chapter', label: 'Ch. 10', icon: '🔗',
+    title: 'AS for Consolidated Financial Statements',
+    desc: 'AS 21, AS 23 & AS 27 applied to CFS preparation',
+    difficulty: 'hard', marks: '12–18',
+    topics: [
+      { id: 'c10_1', name: 'Concept of Group; Parent–Subsidiary Relationship', sub: 'Control definition; when CFS is mandatory; exclusions', priority: 'high' },
+      { id: 'c10_2', name: 'AS 21 — Preparing Consolidated Balance Sheet', sub: 'Line-by-line aggregation; eliminating investment in subsidiary', priority: 'high' },
+      { id: 'c10_3', name: 'Goodwill / Capital Reserve on Consolidation', sub: 'Cost of investment vs fair value of net identifiable assets acquired', priority: 'high' },
+      { id: 'c10_4', name: 'Minority (Non-Controlling) Interest', sub: 'Calculation; presentation in consolidated BS', priority: 'high' },
+      { id: 'c10_5', name: 'Elimination of Inter-Company Transactions', sub: 'Unrealised profit in closing stock; inter-company balances', priority: 'high' },
+      { id: 'c10_6', name: 'Pre-acquisition vs Post-acquisition Profits', sub: 'Capital vs revenue profit of subsidiary; treatment in CFS', priority: 'high' },
+      { id: 'c10_7', name: 'AS 23 — Associates in CFS (Equity Method)', sub: 'Significant influence (20%+); carrying amount; goodwill in associate', priority: 'medium' },
+      { id: 'c10_8', name: 'AS 27 — Joint Ventures in CFS', sub: 'Proportionate consolidation for JCE; equity method alternative', priority: 'medium' },
+    ],
+    practiceQs: [
+      'Prepare Consolidated Balance Sheet: parent + one subsidiary (with goodwill)',
+      'Calculate Minority Interest in consolidated P&L and Balance Sheet',
+      'Eliminate unrealised profit on inter-company stock transfers',
+      'Apply equity method for associate company in CFS',
+      'Find goodwill/capital reserve when subsidiary acquired at mid-year',
+    ],
+    mnemonics: [
+      { key: 'Consolidation Steps (SEAMEN)', tip: 'Separate FS → Eliminate → Add line-by-line → Minority Interest → Eliminate Interco → Note goodwill' },
+      { key: 'Pre-acquisition profit', tip: 'Pre-acquisition = Capital Profit → reduce cost of investment (do NOT take to P&L)' },
+    ]
+  },
+  {
+    id: 'ch11', type: 'chapter', label: 'Ch. 11', icon: '🏢',
+    title: 'Financial Statements of Companies',
+    desc: 'Schedule III, P&L, Balance Sheet & Cash Flow as per Companies Act 2013',
+    difficulty: 'hard', marks: '15–20',
+    topics: [
+      { id: 'c11_1', name: 'Schedule III — Division I (Balance Sheet Format)', sub: 'Equity & Liabilities; Assets — mandatory headings & sub-headings', priority: 'high' },
+      { id: 'c11_2', name: 'Schedule III — Division I (P&L Format)', sub: 'Revenue; expenses; other comprehensive income; exceptional items', priority: 'high' },
+      { id: 'c11_3', name: 'Preparation of Statement of P&L', sub: 'Adjustments — depreciation, provisions, deferred tax, proposed dividend', priority: 'high' },
+      { id: 'c11_4', name: 'Preparation of Balance Sheet with Adjustments', sub: 'Provision for tax, dividend, gratuity, contingent liabilities', priority: 'high' },
+      { id: 'c11_5', name: 'Cash Flow Statement (AS 3) for Companies', sub: 'Indirect method; classification of interest, dividend, tax paid', priority: 'high' },
+      { id: 'c11_6', name: 'Notes to Accounts — Key Disclosures', sub: 'Share capital; reserves; borrowings; deferred tax; related party', priority: 'medium' },
+    ],
+    practiceQs: [
+      'Prepare P&L and Balance Sheet from Trial Balance with 8–10 adjustments',
+      'Classify items under correct heads of Schedule III Balance Sheet',
+      'Prepare Cash Flow Statement (indirect method) for a company',
+      'Draft Notes to Accounts for Share Capital and Reserves & Surplus',
+    ],
+    mnemonics: [
+      { key: 'Equity & Liabilities (Schedule III)', tip: '(1) Shareholders\' Funds (2) Share Application Money (3) Non-Current Liabilities (4) Current Liabilities' },
+      { key: 'Assets (Schedule III)', tip: '(1) Non-Current Assets (2) Current Assets — always in this order' },
+    ]
+  },
+  {
+    id: 'ch12', type: 'chapter', label: 'Ch. 12', icon: '🔄',
+    title: 'Buyback of Securities',
+    desc: 'Sec. 68-70 Companies Act 2013 — conditions, limits, journal entries',
+    difficulty: 'medium', marks: '8–12',
+    topics: [
+      { id: 'c12_1', name: 'Legal Provisions — Sec 68, 69, 70 (Companies Act)', sub: 'Sources, conditions, prohibited buybacks, declaration of solvency', priority: 'high' },
+      { id: 'c12_2', name: 'Permissible Limit Calculation', sub: '25% of paid-up capital + free reserves in any financial year', priority: 'high' },
+      { id: 'c12_3', name: 'Capital Redemption Reserve (CRR)', sub: 'Mandatory transfer; amount = nominal value − amount from fresh issue', priority: 'high' },
+      { id: 'c12_4', name: 'Journal Entries for Buyback', sub: 'Purchase of own shares; cancellation; premium on buyback', priority: 'high' },
+      { id: 'c12_5', name: 'Post-Buyback Balance Sheet', sub: 'Reduced paid-up capital, CRR, revised free reserves', priority: 'medium' },
+    ],
+    practiceQs: [
+      'Compute maximum shares that can be bought back in a given year',
+      'Calculate CRR to be created; pass journal entries for buyback at premium',
+      'Prepare post-buyback Balance Sheet extract',
+      'Explain sources from which buyback can be made (with restrictions)',
+    ],
+    mnemonics: [
+      { key: 'CRR Formula', tip: 'CRR = Shares bought back × Face Value − Proceeds from fresh issue (if any)' },
+      { key: '25% Rule', tip: 'Buyback ≤ 25% of (Paid-up Share Capital + Free Reserves) — per year limit' },
+    ]
+  },
+  {
+    id: 'ch13', type: 'chapter', label: 'Ch. 13', icon: '🔀',
+    title: 'Amalgamation of Companies',
+    desc: 'AS 14 — Merger vs Purchase method; books of transferor & transferee',
+    difficulty: 'hard', marks: '15–20',
+    topics: [
+      { id: 'c13_1', name: 'Types of Amalgamation (AS 14)', sub: 'Amalgamation in nature of merger vs in nature of purchase', priority: 'high' },
+      { id: 'c13_2', name: 'Conditions for Pooling of Interests (Merger)', sub: 'Five mandatory conditions — all assets/liabilities, 90% shareholders, equity only, etc.', priority: 'high' },
+      { id: 'c13_3', name: 'Purchase Consideration — Methods', sub: 'Lump sum; net assets method; intrinsic value method; earnings capacity method', priority: 'high' },
+      { id: 'c13_4', name: 'Goodwill / Capital Reserve', sub: 'PC > Net assets → Goodwill; PC < Net assets → Capital Reserve; treatment', priority: 'high' },
+      { id: 'c13_5', name: 'Books of Transferor (Vendor Company)', sub: 'Realisation Account; closing entries; equity shares received', priority: 'medium' },
+      { id: 'c13_6', name: 'Books of Transferee (Purchasing Company)', sub: 'Journal entries under merger & purchase method; BS after amalgamation', priority: 'high' },
+      { id: 'c13_7', name: 'Treatment of Statutory Reserves', sub: 'Amalgamation Adjustment Account; maintained for statutory period', priority: 'medium' },
+    ],
+    practiceQs: [
+      'Calculate purchase consideration under net assets method',
+      'Prepare Realisation Account in books of transferor company',
+      'Pass journal entries in books of transferee — purchase method',
+      'Identify: is the amalgamation merger or purchase? Give reasons',
+      'Find goodwill or capital reserve; prepare post-amalgamation Balance Sheet',
+    ],
+    mnemonics: [
+      { key: 'Merger — 5 Conditions', tip: 'All assets/liabilities taken over | ≥90% shareholders accept | Only equity shares given | Same business continues | No fair value adjustment' },
+      { key: 'Goodwill vs Cap Reserve', tip: 'PC > Net Assets → Goodwill (intangible asset). PC < Net Assets → Capital Reserve (other equity).' },
+    ]
+  },
+  {
+    id: 'ch14', type: 'chapter', label: 'Ch. 14', icon: '🏗️',
+    title: 'Accounting for Reconstruction of Companies',
+    desc: 'Internal reconstruction — capital reduction, scheme of arrangement',
+    difficulty: 'hard', marks: '10–15',
+    topics: [
+      { id: 'c14_1', name: 'Internal vs External Reconstruction', sub: 'Meaning, purpose, differences from amalgamation', priority: 'medium' },
+      { id: 'c14_2', name: 'Alteration of Share Capital (Sec 61)', sub: 'Sub-division, consolidation, cancellation of unissued capital — entries', priority: 'medium' },
+      { id: 'c14_3', name: 'Reduction of Share Capital (Sec 66)', sub: 'Conditions; court/NCLT approval; surrender of shares', priority: 'high' },
+      { id: 'c14_4', name: 'Scheme of Capital Reduction', sub: 'Capital Reduction Account; writing off accumulated losses, fictitious assets', priority: 'high' },
+      { id: 'c14_5', name: 'Journal Entries for Reconstruction Scheme', sub: 'Sacrifice by shareholders/creditors; discharge of liabilities; gain on creditors', priority: 'high' },
+      { id: 'c14_6', name: 'Balance Sheet after Internal Reconstruction', sub: 'Fresh-start reporting; revised capital structure; clean balance sheet', priority: 'high' },
+    ],
+    practiceQs: [
+      'Prepare Capital Reduction Account from a given scheme of reconstruction',
+      'Pass journal entries — sacrifice by equity/preference shareholders and creditors',
+      'Prepare Balance Sheet after reconstruction (clean-start)',
+      'Distinguish internal reconstruction from amalgamation',
+    ],
+    mnemonics: [
+      { key: 'Capital Reduction A/c', tip: 'Dr: Fictitious assets written off, losses written off. Cr: Sacrifice by shareholders/creditors. Balance = New goodwill or capital reserve.' },
+    ]
+  },
+  {
+    id: 'ch15', type: 'chapter', label: 'Ch. 15', icon: '🌿',
+    title: 'Accounting for Branches incl. Foreign Branches',
+    desc: 'Dependent / independent branches; foreign branch translation',
+    difficulty: 'medium', marks: '8–12',
+    topics: [
+      { id: 'c15_1', name: 'Types of Branches', sub: 'Dependent, independent; inland vs foreign; key differences', priority: 'medium' },
+      { id: 'c15_2', name: 'Dependent Branch — Debtors System', sub: 'Branch Account in HO books; unrealised profit on closing stock', priority: 'high' },
+      { id: 'c15_3', name: 'Dependent Branch — Stock & Debtors System', sub: 'Goods Sent, Branch Stock, Branch Debtors, Expenses — separate A/cs', priority: 'high' },
+      { id: 'c15_4', name: 'Independent Branch', sub: 'Branch prepares own accounts; incorporation journal entries in HO', priority: 'medium' },
+      { id: 'c15_5', name: 'Foreign Branch — Translation Methods', sub: 'Monetary/non-monetary method; closing rate method; AS 11 application', priority: 'high' },
+      { id: 'c15_6', name: 'Translation Differences & Their Treatment', sub: 'Exchange differences — P&L or Foreign Currency Translation Reserve', priority: 'medium' },
+    ],
+    practiceQs: [
+      'Prepare Branch Account in HO books under Debtors System',
+      'Calculate branch profit under Stock & Debtors System',
+      'Journalise unrealised profit on closing stock of dependent branch',
+      'Translate foreign branch trial balance into INR; treat exchange difference',
+    ],
+    mnemonics: [
+      { key: 'Debtors System Formula', tip: 'Opening + Goods sent + Cash for expenses = Sales + Closing + Branch P/L (balancing fig.)' },
+      { key: 'Foreign Branch Translation', tip: 'Monetary items → Closing Rate | Non-monetary items → Historical Rate | P&L items → Average Rate' },
+    ]
+  },
+];
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+const DEF = { 
+  topicStatus:{}, topicStars:{}, notes:{}, pqStatus:{}, log:[], studyMinutes:0, 
+  currentSection: syllabus[0].id, examDate: '', timeLogs: {}, streak: 0, lastStreakDate: '', qbank: []
+};
+let S = {};
+
+function loadS(){ 
+  try{ const r=localStorage.getItem('ca_adv_v2_final'); S = r ? {...DEF,...JSON.parse(r)} : {...DEF}; }
+  catch(e){ S={...DEF}; } 
+  // Restore Exam Date
+  if (S.examDate) document.getElementById('examDate').value = S.examDate;
+  checkStreakReset();
+}
+function saveS(){ try{ localStorage.setItem('ca_adv_v2_final', JSON.stringify(S)); }catch(e){} }
+
+// ─── STREAK LOGIC ────────────────────────────────────────────────────────────
+function checkStreakReset() {
+  const today = new Date().toISOString().split('T')[0];
+  if (S.lastStreakDate) {
+    const last = new Date(S.lastStreakDate);
+    const curr = new Date(today);
+    const diff = (curr - last) / (1000 * 60 * 60 * 24);
+    if (diff > 1) { S.streak = 0; saveS(); }
+  }
+  updateStreakUI();
+}
+
+function updateStreakUI() {
+  const el = document.getElementById('streakCounter');
+  if(el) el.textContent = `🔥 ${S.streak} Streak`;
+}
+
+function checkAddStreak() {
+  const today = new Date().toISOString().split('T')[0];
+  if (S.lastStreakDate !== today) {
+    S.streak = (S.streak || 0) + 1;
+    S.lastStreakDate = today;
+    saveS();
+    updateStreakUI();
+    toast(`🔥 Awesome! Streak increased to ${S.streak}!`);
+  }
+}
+
+// ─── TIMER ───────────────────────────────────────────────────────────────────
+let timerSec = 25*60, timerOn = false, timerMode = 'pomo', timerIv = null;
+const timerModes = { pomo: 25*60, short: 5*60, long: 45*60 };
+
+function setTimerMode(m, btn) {
+  timerMode = m;
+  document.querySelectorAll('.tm-mode-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (!timerOn) { timerSec = timerModes[m]; updTimer(); }
+}
+function toggleTimer() {
+  timerOn = !timerOn;
+  const btn = document.getElementById('tmBtn');
+  if (timerOn) {
+    btn.textContent = '⏸ Pause';
+    timerIv = setInterval(() => {
+      timerSec--;
+      if (timerSec <= 0) { clearInterval(timerIv); timerOn=false; timerSec=timerModes[timerMode]; btn.textContent='▶ Start'; toast('⏰ Session complete! Great work!'); logSession(); }
+      updTimer();
+    }, 1000);
+  } else {
+    clearInterval(timerIv);
+    btn.textContent = '▶ Start';
+  }
+}
+function resetTimer() {
+  clearInterval(timerIv); timerOn=false; timerSec=timerModes[timerMode];
+  document.getElementById('tmBtn').textContent = '▶ Start';
+  updTimer();
+}
+function updTimer() {
+  const m = Math.floor(timerSec/60), s = timerSec%60;
+  document.getElementById('tmDisplay').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+function logSession() {
+  const sec = syllabus.find(x => x.id === S.currentSection);
+  const elapsed = timerModes[timerMode] - timerSec;
+  const mins = Math.max(1, Math.round(elapsed/60));
+  S.studyMinutes = (S.studyMinutes||0) + mins;
+  
+  // Daily Time Log
+  const today = new Date().toISOString().split('T')[0];
+  if(!S.timeLogs) S.timeLogs = {};
+  S.timeLogs[today] = (S.timeLogs[today] || 0) + mins;
+
+  const entry = { text: `${sec ? sec.label : 'Study'} — ${mins} min`, time: new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) };
+  S.log.unshift(entry);
+  if (S.log.length > 30) S.log.pop();
+  saveS(); renderLog(); updateStats(); toast('✓ Session logged!');
+  if (currentTab === 'overview') renderTab(sec); // Refresh overview stats if open
+}
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+function secProgress(sec) {
+  const done = sec.topics.filter(t => ['done','revision'].includes(S.topicStatus[t.id]||'')).length;
+  return { done, total: sec.topics.length, pct: Math.round(done/sec.topics.length*100) };
+}
+function allTopics() { return syllabus.flatMap(s => s.topics); }
+function domainColor(pct) {
+  if (pct === 100) return '#2da44e';
+  if (pct >= 50) return '#0969da';
+  if (pct > 0) return '#9a6700';
+  return '#d0d7de';
+}
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+function updateCountdown() {
+  const d = document.getElementById('examDate').value;
+  S.examDate = d; saveS(); // Persist Exam Date
+  const el = document.getElementById('countdown');
+  if (!d) { el.textContent=''; document.getElementById('sbDays').textContent='—'; return; }
+  const diff = Math.ceil((new Date(d)-new Date())/(864e5));
+  const txt = diff > 0 ? diff+'d left' : diff===0 ? 'Today!' : 'Exam passed';
+  el.textContent = txt;
+  document.getElementById('sbDays').textContent = diff > 0 ? diff+'d' : diff===0?'🎯':'✓';
+}
+
+// ─── SIDEBAR ─────────────────────────────────────────────────────────────────
+function renderSidebar(filter='') {
+  const el = document.getElementById('sbScroll');
+  const groups = [
+    { label: 'Accounting Standards', items: syllabus.filter(s => s.type==='section') },
+    { label: 'Chapters', items: syllabus.filter(s => s.type==='chapter') },
+  ];
+  let html = '';
+  groups.forEach(g => {
+    const visible = g.items.filter(s => !filter || s.title.toLowerCase().includes(filter.toLowerCase()));
+    if (!visible.length) return;
+    html += `<div class="sb-group-lbl">${g.label}</div>`;
+    visible.forEach(s => {
+      const {done,total,pct} = secProgress(s);
+      const dotCls = pct===100?'done':pct>0?'in-progress':'none';
+      const active = s.id === S.currentSection ? ' active' : '';
+      html += `<div class="sb-item${active}" onclick="selectSection('${s.id}')">
+        <div class="sb-dot ${dotCls}"></div>
+        <div class="sb-text">
+          <div class="sb-name">${s.label}: ${s.title}</div>
+          <div class="sb-pct">${done}/${total} topics
+            <div class="sb-mini-p"><div class="sb-mini-f" style="width:${pct}%"></div></div>
+          </div>
+        </div>
+        <span class="sb-badge">${pct}%</span>
+      </div>`;
+    });
+    html += `<div class="sb-divider"></div>`;
+  });
+  el.innerHTML = html;
+
+  const all = allTopics();
+  const done = all.filter(t => ['done','revision'].includes(S.topicStatus[t.id]||'')).length;
+  const completed = syllabus.filter(s => secProgress(s).pct===100).length;
+  document.getElementById('sbDone').textContent = done;
+  document.getElementById('sbTotal').textContent = all.length;
+  document.getElementById('sbProgress').textContent = `${completed}/${syllabus.length} complete`;
+  const mins = S.studyMinutes||0;
+  document.getElementById('sbHours').textContent = (mins/60).toFixed(1)+'h';
+}
+function filterSidebar(v) { renderSidebar(v); }
+
+// ─── STATS & HEADER ───────────────────────────────────────────────────────────
+function updateStats() {
+  const all = allTopics();
+  const done = all.filter(t => ['done','revision'].includes(S.topicStatus[t.id]||'')).length;
+  const rev = all.filter(t => (S.topicStatus[t.id]||'')==='revision').length;
+  const pct = Math.round(done/all.length*100);
+  const hrs = ((S.studyMinutes||0)/60).toFixed(1);
+
+  document.getElementById('hdrPct').textContent = pct+'%';
+  document.getElementById('hdrBar').style.width = pct+'%';
+  document.getElementById('hdrFrac').textContent = `${done}/${all.length}`;
+  document.getElementById('rsDone').textContent = done;
+  document.getElementById('rsTotal').textContent = all.length;
+  document.getElementById('rsHours').textContent = hrs+'h';
+  document.getElementById('rsRevision').textContent = rev;
+  renderSidebar();
+}
+
+// ─── LOG ─────────────────────────────────────────────────────────────────────
+function renderLog() {
+  const el = document.getElementById('logList');
+  if (!S.log || !S.log.length) { el.innerHTML='<div class="empty-log">No sessions yet</div>'; return; }
+  el.innerHTML = S.log.slice(0,15).map(e => `<div class="log-row"><div class="log-dot"></div><div class="log-txt">${e.text}</div><div class="log-t">${e.time}</div></div>`).join('');
+}
+function clearLog() { S.log=[]; saveS(); renderLog(); }
+
+// ─── SECTION SELECTION ────────────────────────────────────────────────────────
+function selectSection(id) {
+  S.currentSection = id;
+  document.getElementById('tmSub').textContent = syllabus.find(s=>s.id===id)?.label || '';
+  saveS();
+  renderSidebar();
+  renderMain();
+}
+
+// ─── MAIN CONTENT ─────────────────────────────────────────────────────────────
+let currentTab = 'topics';
+function renderMain() {
+  const sec = syllabus.find(s => s.id === S.currentSection);
+  if (!sec) return;
+  const {done,total,pct} = secProgress(sec);
+  const diffLbl = sec.difficulty==='hard'?'⭐⭐⭐ Difficult':sec.difficulty==='medium'?'⭐⭐ Moderate':'⭐ Easier';
+  const diffCls = sec.difficulty==='hard'?'hard':sec.difficulty==='medium'?'medium':'easy';
+
+  const starsCount = sec.topics.filter(t=>S.topicStars[t.id]).length;
+  const inProg = sec.topics.filter(t=>(S.topicStatus[t.id]||'')==='in-progress').length;
+  const qBankCount = (S.qbank||[]).filter(q=>q.chapterId===sec.id).length; // Q-Bank count
+
+  document.getElementById('mainContent').innerHTML = `
+    <div class="ch-hdr">
+      <div class="ch-hdr-row">
+        <div class="ch-icon">${sec.icon}</div>
+        <div class="ch-info">
+          <div class="ch-crumb">Advanced Accounting › ${sec.type==='chapter'?'Chapter':'Section'}</div>
+          <div class="ch-title">${sec.label}: ${sec.title}</div>
+          <div class="ch-desc">${sec.desc}</div>
+          <div class="ch-labels">
+            ${sec.marks?`<span class="lbl marks">📊 ${sec.marks} marks</span>`:''}
+            <span class="lbl ${diffCls}">${diffLbl}</span>
+            <span class="lbl accent">${pct}% complete</span>
+            ${starsCount?`<span class="lbl purple">★ ${starsCount} starred</span>`:''}
+            ${inProg?`<span class="lbl accent">⚡ ${inProg} in progress</span>`:''}
+          </div>
+          <div class="ch-prog"><div class="ch-prog-fill" style="width:${pct}%"></div></div>
+        </div>
+        <div class="ch-acts">
+          <button class="btn green" onclick="markAllDone('${sec.id}')">✓ All Done</button>
+          <button class="btn ghost" onclick="resetSection('${sec.id}')">↺ Reset</button>
         </div>
       </div>
     </div>
-  </main>
-</div>
+    <div class="tabs">
+      <button class="tab-btn ${currentTab==='topics'?'active':''}" onclick="switchTab('topics',this)">Topics <span class="tc">${total}</span></button>
+      <button class="tab-btn ${currentTab==='qbank'?'active':''}" onclick="switchTab('qbank',this)">Q-Bank <span class="tc">${qBankCount}</span></button>
+      <button class="tab-btn ${currentTab==='notes'?'active':''}" onclick="switchTab('notes',this)">My Notes</button>
+      <button class="tab-btn ${currentTab==='practice'?'active':''}" onclick="switchTab('practice',this)">Practice Qs <span class="tc">${sec.practiceQs?.length||0}</span></button>
+      <button class="tab-btn ${currentTab==='overview'?'active':''}" onclick="switchTab('overview',this)">Overview</button>
+    </div>
+    <div id="tabBody"></div>
+  `;
+  renderTab(sec);
+}
 
-<script>
-// डिफ़ॉल्ट डेटा स्ट्रक्चर
-let S = JSON.parse(localStorage.getItem('ca_inter_local_data')) || { topicStatus: {}, notes: {}, qbank: [] };
-let cloudId = localStorage.getItem('ca_inter_cloud_id') || "";
+function switchTab(t, btn) {
+  currentTab = t;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderTab(syllabus.find(s=>s.id===S.currentSection));
+}
 
-// पेज लोड होते ही अगर URL में आईडी है तो डेटा खींचना
-window.onload = function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const idFromUrl = urlParams.get('id');
+function renderTab(sec) {
+  const tb = document.getElementById('tabBody');
+  if (!tb) return;
+
+  if (currentTab === 'topics') {
+    tb.innerHTML = `<div class="tw"><table class="gh-tbl">
+      <thead><tr>
+        <th style="width:30px; text-align:center;"></th>
+        <th>Topic Details</th>
+        <th style="width:85px">Priority</th>
+        <th style="width:130px">Status</th>
+        <th style="width:40px; text-align:center;">★</th>
+      </tr></thead>
+      <tbody>
+      ${sec.topics.map(t => {
+        const st = S.topicStatus[t.id]||'none';
+        const starred = S.topicStars[t.id]||false;
+        const icons = {none:'',done:'✓','in-progress':'…',revision:'↻'};
+        const doneText = st==='done'||st==='revision' ? ' done-text' : '';
+        return `<tr>
+          <td><div class="t-circle ${st}" onclick="cycleStatus('${t.id}')" title="Click to cycle status">${icons[st]||''}</div></td>
+          <td><div class="topic-cell">
+            <div class="t-info">
+              ${t.code?`<div style="margin-bottom:4px"><span class="as-chip">${t.code}</span></div>`:''}
+              <div class="t-name${doneText}">${t.name}</div>
+              <div class="t-sub">${t.sub}</div>
+            </div>
+          </div></td>
+          <td><span class="p-dot ${t.priority||'medium'}"></span> <span style="font-size:12px; font-weight:600; color:var(--gh-text-2)">${(t.priority||'medium').charAt(0).toUpperCase()+(t.priority||'medium').slice(1)}</span></td>
+          <td>
+            <select class="st-sel" onchange="setStatus('${t.id}',this.value)">
+              <option value="none" ${st==='none'?'selected':''}>Not started</option>
+              <option value="in-progress" ${st==='in-progress'?'selected':''}>In progress</option>
+              <option value="done" ${st==='done'?'selected':''}>Done ✓</option>
+              <option value="revision" ${st==='revision'?'selected':''}>Revision ↻</option>
+            </select>
+          </td>
+          <td style="text-align:center;"><button class="star-b ${starred?'on':''}" onclick="toggleStar('${t.id}')">★</button></td>
+        </tr>`;
+      }).join('')}
+      </tbody>
+    </table></div>`;
+
+  } else if (currentTab === 'qbank') {
+    const qs = (S.qbank || []).filter(q => q.chapterId === sec.id);
+    tb.innerHTML = `
+      <div class="tw">
+          <div class="qb-form">
+              <input type="text" id="qbText" class="qb-input" placeholder="Enter important question...">
+              <select id="qbCat" class="qb-select">
+                  <option value="A">Category A (High)</option>
+                  <option value="B">Category B (Medium)</option>
+                  <option value="C">Category C (Low)</option>
+              </select>
+              <select id="qbSrc" class="qb-select">
+                  <option value="ICAI Module">ICAI Module</option>
+                  <option value="CA Nitin Goel">CA Nitin Goel</option>
+                  <option value="Aakash Kandoi">Aakash Kandoi</option>
+                  <option value="MTP 2024">MTP 2024</option>
+                  <option value="Other">Other</option>
+              </select>
+              <button class="btn green" onclick="addQBank('${sec.id}')">+ Add</button>
+          </div>
+          <div style="background:var(--gh-canvas); border:1px solid var(--gh-border); border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
+              ${qs.length === 0 ? '<div style="padding:30px;text-align:center;color:var(--gh-text-3);font-size:14px;font-weight:500;">No questions added yet. Be the smart worker!</div>' : qs.map(q => `
+                  <div class="qb-item">
+                      <input type="checkbox" class="qb-chk" ${q.isDone?'checked':''} onchange="toggleQBank('${q.id}')">
+                      <div class="qb-text ${q.isDone?'done':''}">${q.text}</div>
+                      <span class="qb-src">${q.source}</span>
+                      <span class="lbl qb-cat-${q.category}">Cat ${q.category}</span>
+                      <button class="qb-del" onclick="delQBank('${q.id}')" title="Delete">✖</button>
+                  </div>
+              `).join('')}
+          </div>
+      </div>`;
+
+  } else if (currentTab === 'notes') {
+    const saved = S.notes[sec.id]||'';
+    tb.innerHTML = `<div class="notes-wrap">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <span style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--gh-text-2)">Your Notes — ${sec.label}</span>
+        <button class="btn def" onclick="saveNote('${sec.id}')" style="font-size:12px;padding:6px 12px;">💾 Save Notes</button>
+      </div>
+      <textarea class="notes-ta" id="noteTA" placeholder="Write revision notes, formulas, solved examples, shortcuts…">${saved}</textarea>
+      <span id="noteSaved" style="font-size:12px;font-weight:600;color:var(--gh-green);display:none;margin-top:8px;">✓ Successfully Saved!</span>
+      <div style="margin-top:20px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--gh-text-2);margin-bottom:8px;">Quick Mnemonics</div>
+      ${(sec.mnemonics||[]).map(m=>`<div class="mnemonic-box"><strong>💡 ${m.key}</strong>${m.tip}</div>`).join('')}
+    </div>`;
+
+  } else if (currentTab === 'practice') {
+    tb.innerHTML = `<div class="pq-wrap">
+      ${(sec.practiceQs||[]).map((q,i)=>{
+        const key=`pq_${sec.id}_${i}`;
+        const done=(S.pqStatus||{})[key]==='done';
+        return `<div class="pq-item">
+          <div class="pq-num">${i+1}</div>
+          <div class="pq-text">${q}</div>
+          <button class="pq-btn ${done?'done':'todo'}" id="${key}" onclick="togglePQ('${sec.id}',${i},this)">${done?'Done ✓':'To-do'}</button>
+        </div>`;
+      }).join('')}
+      <div class="pq-tip">💡 <strong>Tip:</strong> Attempt past ICAI exam questions for each topic. Focus on presentation — marks are awarded for proper workings and format.</div>
+    </div>`;
+
+  } else if (currentTab === 'overview') {
+    const today = new Date().toISOString().split('T')[0];
+    const dailyMins = S.timeLogs?.[today] || 0;
     
-    if (idFromUrl) {
-        cloudId = idFromUrl;
-        localStorage.setItem('ca_inter_cloud_id', cloudId);
-        fetchFromCloud();
-    } else if (cloudId) {
-        updateStatus("लोकल बैकअप लोडेड। क्लाउड से लेटेस्ट डेटा के लिए Refresh दबाएं।");
-    } else {
-        updateStatus("नया क्लाउड स्टोरेज बनाने के लिए Save Permanent दबाएं।");
+    // Weekly calculation (last 7 days)
+    let weeklyMins = 0;
+    for(let i=0; i<7; i++) {
+        const d = new Date(); 
+        d.setDate(d.getDate() - i);
+        const dateStr = d.toISOString().split('T')[0];
+        weeklyMins += (S.timeLogs?.[dateStr] || 0);
     }
-}
-
-function updateStatus(msg) {
-    document.getElementById('cloudStatus').innerText = msg;
-}
-
-// 1. डेटा क्लाउड पर परमानेंट सेव करने का लॉजिक (JSONBlob API)
-function saveToCloud() {
-    updateStatus("क्लाउड पर सेव हो रहा है...");
     
-    let url = "https://jsonblob.com/api/jsonBlob";
-    let method = "POST";
-    
-    if (cloudId) {
-        url = `https://jsonblob.com/api/jsonBlob/${cloudId}`;
-        method = "PUT";
-    }
+    // Total calculation
+    const totalMins = S.studyMinutes || 0;
 
-    fetch(url, {
-        method: method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(S)
-    })
-    .then(res => {
-        if (method === "POST") {
-            // पहली बार सेव करने पर एक यूनिक आईडी मिलती है
-            const locationHeader = res.headers.get('Location');
-            cloudId = locationHeader.substring(locationHeader.lastIndexOf('/') + 1);
-            localStorage.setItem('ca_inter_cloud_id', cloudId);
-        }
-        localStorage.setItem('ca_inter_local_data', JSON.stringify(S));
-        updateStatus("✅ डेटा परमानेंट सेव हो गया!");
-        alert("🎯 डेटा सुरक्षित रूप से ऑनलाइन सेव हो गया है! किसी भी डिवाइस पर खोलने के लिए 'Copy Share Link' दबाएं।");
-    })
-    .catch(err => {
-        updateStatus("❌ सेव करने में एरर आया।");
-        alert("इंटरनेट चेक करें, सेव नहीं हो पाया।");
-    });
+    tb.innerHTML = `
+    <div style="padding: 24px 30px;">
+        <div style="display:flex;gap:15px;margin-bottom:30px;">
+            <div class="stat-b blue" style="flex:1"><div class="v">${(dailyMins/60).toFixed(1)}h</div><div class="l">Today</div></div>
+            <div class="stat-b purple" style="flex:1"><div class="v">${(weeklyMins/60).toFixed(1)}h</div><div class="l">This Week</div></div>
+            <div class="stat-b green" style="flex:1"><div class="v">${(totalMins/60).toFixed(1)}h</div><div class="l">Total Study</div></div>
+        </div>
+
+        <div style="font-size:12px; font-weight:800; color:var(--gh-text-2); margin-bottom:16px; letter-spacing:1px;">CHAPTER DASHBOARD</div>
+        
+        <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px;">
+          ${syllabus.map(s => {
+            const {done, total, pct} = secProgress(s);
+            const col = domainColor(pct);
+            return `
+            <div class="ov-card" onclick="selectSection('${s.id}')">
+                <div class="ov-top">
+                    <span class="ov-icon">${s.icon}</span>
+                    <div style="flex:1; overflow:hidden;">
+                        <div class="ov-name">${s.title}</div>
+                        <div class="ov-sub">${s.label} • ${s.marks || '0'} Marks</div>
+                    </div>
+                </div>
+                <div class="ov-bar">
+                    <div class="ov-fill" style="width:${pct}%; background:${col};"></div>
+                </div>
+                <div class="ov-meta">
+                    <span>${done}/${total} Topics</span>
+                    <span style="font-weight:700; color:${col}">${pct}%</span>
+                </div>
+            </div>`;
+          }).join('')}
+        </div>
+    </div>`;
+  }
 }
 
-// 2. क्लाउड से लेटेस्ट डेटा खींचने का लॉजिक (Refresh)
-function fetchFromCloud() {
-    if (!cloudId) {
-        alert("पहले 'Save Permanent' बटन दबाकर अपनी ऑनलाइन लिंक जनरेट करें।");
-        return;
+// ─── Q-BANK ACTIONS ───────────────────────────────────────────────────────────
+function addQBank(chId) {
+    const txt = document.getElementById('qbText').value.trim();
+    const cat = document.getElementById('qbCat').value;
+    const src = document.getElementById('qbSrc').value;
+    if(!txt) return;
+    if(!S.qbank) S.qbank = [];
+    S.qbank.push({ id: 'qb_'+Date.now(), chapterId: chId, text: txt, category: cat, source: src, isDone: false });
+    saveS(); renderMain();
+}
+function toggleQBank(id) {
+    const q = S.qbank.find(x => x.id === id);
+    if(q) { 
+        q.isDone = !q.isDone; 
+        if (q.isDone) checkAddStreak(); // Add streak if marked done
+        saveS(); 
+        renderTab(syllabus.find(s=>s.id===S.currentSection)); 
     }
-    updateStatus("क्लाउड से डेटा लाया जा रहा है...");
-    
-    fetch(`https://jsonblob.com/api/jsonBlob/${cloudId}`)
-    .then(res => res.json())
-    .then(data => {
-        S = data;
-        localStorage.setItem('ca_inter_local_data', JSON.stringify(S));
-        updateStatus("🔄 लेटेस्ट डेटा अपडेटेड!");
-    })
-    .catch(err => {
-        updateStatus("❌ डेटा लोड नहीं हो सका।");
-    });
+}
+function delQBank(id) {
+    S.qbank = S.qbank.filter(x => x.id !== id);
+    saveS(); renderMain();
 }
 
-function refreshData() {
-    if(cloudId) {
-        fetchFromCloud();
-        setTimeout(() => { location.reload(); }, 1000);
-    } else {
-        location.reload();
-    }
+// ─── TOPIC ACTIONS ────────────────────────────────────────────────────────────
+const statusCycle = ['none','in-progress','done','revision'];
+function cycleStatus(tid) {
+  const cur = S.topicStatus[tid]||'none';
+  const next = statusCycle[(statusCycle.indexOf(cur)+1)%statusCycle.length];
+  S.topicStatus[tid]=next; 
+  if (next === 'done') checkAddStreak();
+  saveS();
+  renderMain(); renderSidebar(); updateStats();
+}
+function setStatus(tid,val) {
+  S.topicStatus[tid]=val; 
+  if (val === 'done') checkAddStreak();
+  saveS();
+  renderSidebar(); updateStats();
+  const row = document.querySelector(`[onclick="cycleStatus('${tid}')"]`);
+  if(row){ const icons={none:'',done:'✓','in-progress':'…',revision:'↻'}; row.className=`t-circle ${val}`; row.textContent=icons[val]||''; }
+  const nameEl = row?.closest('tr')?.querySelector('.t-name');
+  if(nameEl){ nameEl.classList.toggle('done-text',val==='done'||val==='revision'); }
+}
+function toggleStar(tid) { S.topicStars[tid]=!S.topicStars[tid]; saveS(); renderMain(); }
+function markAllDone(sid) {
+  const sec=syllabus.find(s=>s.id===sid);
+  sec.topics.forEach(t=>S.topicStatus[t.id]='done');
+  checkAddStreak();
+  saveS(); renderMain(); renderSidebar(); updateStats(); toast(`✓ ${sec.label} marked complete!`);
+}
+function resetSection(sid) {
+  const sec=syllabus.find(s=>s.id===sid);
+  sec.topics.forEach(t=>{ delete S.topicStatus[t.id]; delete S.topicStars[t.id]; });
+  saveS(); renderMain(); renderSidebar(); updateStats(); toast('↺ Section reset');
+}
+function togglePQ(sid,idx,btn) {
+  if(!S.pqStatus) S.pqStatus={};
+  const key=`pq_${sid}_${idx}`;
+  const done=S.pqStatus[key]==='done';
+  S.pqStatus[key]=done?'not-started':'done';
+  if (!done) checkAddStreak();
+  btn.textContent=done?'To-do':'Done ✓';
+  btn.className=`pq-btn ${done?'todo':'done'}`;
+  saveS();
+}
+function saveNote(sid) {
+  const ta=document.getElementById('noteTA');
+  if(ta){ S.notes[sid]=ta.value; saveS(); }
+  const msg=document.getElementById('noteSaved');
+  if(msg){ msg.style.display='inline'; setTimeout(()=>msg.style.display='none',2500); }
 }
 
-// 3. किसी भी डिवाइस के लिए शेयर लिंक बनाना
-function shareLink() {
-    if (!cloudId) {
-        alert("❌ पहले 'Save Permanent' बटन दबाएं ताकि आपकी लिंक बन सके!");
-        return;
-    }
-    const shareUrl = `${window.location.origin}${window.location.pathname}?id=${cloudId}`;
-    navigator.clipboard.writeText(shareUrl);
-    alert("🔗 आपकी परमानेंट सिंक लिंक कॉपी हो गई है!\n\nइसे अपने पास व्हाट्सएप या कहीं भी सेव कर लें। किसी भी डिवाइस पर इस लिंक को खोलते ही आपका डेटा दिख जाएगा।");
-}
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+loadS();
+renderSidebar();
+renderMain();
+renderLog();
+updateStats();
+updTimer();
+updateCountdown();
 </script>
 </body>
 </html>
