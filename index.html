@@ -4,14 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CA Inter — Advanced Accounting Planner</title>
+<!-- Firebase SDKs Included -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
 <style>
 :root {
   --gh-canvas: #ffffff;
-  --gh-subtle: #f8f9fa; /* Lighter, cleaner background */
+  --gh-subtle: #f8f9fa; 
   --gh-border: #d0d7de;
   --gh-border-muted: #e1e4e8;
-  --gh-header: #f8f9fa; /* Light professional header */
-  --gh-sidebar: #ffffff; /* Clean white sidebar */
+  --gh-header: #f8f9fa; 
+  --gh-sidebar: #ffffff; 
   --gh-sidebar-text: #24292f;
   --gh-sidebar-muted: #57606a;
   --gh-sidebar-border: #e1e4e8;
@@ -325,6 +330,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 <div class="toast" id="toast"></div>
 
 <script>
+// ─── FIREBASE CONFIGURATION ──────────────────────────────────────────────────
+// TODO: Replace this config boilerplate with your actual Firebase project setup details
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const auth = firebase.auth();
+let userRef = null;
+
 // ─── SYLLABUS DATA ──────────────────────────────────────────────────────────
 const syllabus = [
   {
@@ -545,7 +568,7 @@ const syllabus = [
       { id: 'c14_1', name: 'Internal vs External Reconstruction', sub: 'Meaning, purpose, differences from amalgamation', priority: 'medium' },
       { id: 'c14_2', name: 'Alteration of Share Capital (Sec 61)', sub: 'Sub-division, consolidation, cancellation of unissued capital — entries', priority: 'medium' },
       { id: 'c14_3', name: 'Reduction of Share Capital (Sec 66)', sub: 'Conditions; court/NCLT approval; surrender of shares', priority: 'high' },
-      { id: 'c14_4', name: 'Scheme of Capital Reduction', sub: 'Capital Reduction Account; writing off accumulated losses, fictitious assets', priority: 'high' },
+      { id: 'c14_4', name: 'Scheme of Capital Reconstruction', sub: 'Capital Reduction Account; writing off accumulated losses, fictitious assets', priority: 'high' },
       { id: 'c14_5', name: 'Journal Entries for Reconstruction Scheme', sub: 'Sacrifice by shareholders/creditors; discharge of liabilities; gain on creditors', priority: 'high' },
       { id: 'c14_6', name: 'Balance Sheet after Internal Reconstruction', sub: 'Fresh-start reporting; revised capital structure; clean balance sheet', priority: 'high' },
     ],
@@ -590,16 +613,58 @@ const DEF = {
   topicStatus:{}, topicStars:{}, notes:{}, pqStatus:{}, log:[], studyMinutes:0, 
   currentSection: syllabus[0].id, examDate: '', timeLogs: {}, streak: 0, lastStreakDate: '', qbank: []
 };
-let S = {};
+let S = {...DEF};
 
-function loadS(){ 
-  try{ const r=localStorage.getItem('ca_adv_v2_final'); S = r ? {...DEF,...JSON.parse(r)} : {...DEF}; }
-  catch(e){ S={...DEF}; } 
-  // Restore Exam Date
-  if (S.examDate) document.getElementById('examDate').value = S.examDate;
-  checkStreakReset();
+// ─── FIREBASE AUTH & LOGIC ───────────────────────────────────────────────────
+auth.signInAnonymously().catch(error => {
+  console.error("Firebase Sign-in Error: ", error.message);
+  toast("⚠️ Sync error. Working in Local-only mode.");
+});
+
+auth.onAuthStateChanged(user => {
+  if (user) {
+    // Generate a fixed path for synchronization across devices. 
+    // You can replace 'global_user' with user.uid to have dynamic multiple user accounts.
+    userRef = db.ref("users/global_user");
+    
+    // Listen for data changes on firebase server and automatically update state
+    userRef.on('value', snapshot => {
+      const data = snapshot.val();
+      if (data) {
+        S = { ...DEF, ...data };
+        
+        // Normalize empty object arrays which Firebase ignores
+        if (!S.topicStatus) S.topicStatus = {};
+        if (!S.topicStars) S.topicStars = {};
+        if (!S.notes) S.notes = {};
+        if (!S.pqStatus) S.pqStatus = {};
+        if (!S.log) S.log = [];
+        if (!S.timeLogs) S.timeLogs = {};
+        if (!S.qbank) S.qbank = [];
+
+        // Apply changes safely UI-wide
+        if (S.examDate) {
+          const ed = document.getElementById('examDate');
+          if (ed) ed.value = S.examDate;
+        }
+        checkStreakReset();
+        renderSidebar();
+        renderMain();
+        renderLog();
+        updateStats();
+        updateCountdown();
+      }
+    });
+  }
+});
+
+function saveS() {
+  if (userRef) {
+    userRef.set(S).catch(e => console.error("Firebase Sync Fail:", e));
+  } else {
+    try { localStorage.setItem('ca_adv_v2_final', JSON.stringify(S)); } catch(e){}
+  }
 }
-function saveS(){ try{ localStorage.setItem('ca_adv_v2_final', JSON.stringify(S)); }catch(e){} }
 
 // ─── STREAK LOGIC ────────────────────────────────────────────────────────────
 function checkStreakReset() {
@@ -678,7 +743,7 @@ function logSession() {
   S.log.unshift(entry);
   if (S.log.length > 30) S.log.pop();
   saveS(); renderLog(); updateStats(); toast('✓ Session logged!');
-  if (currentTab === 'overview') renderTab(sec); // Refresh overview stats if open
+  if (currentTab === 'overview') renderTab(sec); 
 }
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
@@ -700,18 +765,19 @@ function toast(msg) {
 }
 function updateCountdown() {
   const d = document.getElementById('examDate').value;
-  S.examDate = d; saveS(); // Persist Exam Date
+  S.examDate = d;
   const el = document.getElementById('countdown');
-  if (!d) { el.textContent=''; document.getElementById('sbDays').textContent='—'; return; }
+  if (!d) { if(el) el.textContent=''; document.getElementById('sbDays').textContent='—'; return; }
   const diff = Math.ceil((new Date(d)-new Date())/(864e5));
   const txt = diff > 0 ? diff+'d left' : diff===0 ? 'Today!' : 'Exam passed';
-  el.textContent = txt;
+  if(el) el.textContent = txt;
   document.getElementById('sbDays').textContent = diff > 0 ? diff+'d' : diff===0?'🎯':'✓';
 }
 
 // ─── SIDEBAR ─────────────────────────────────────────────────────────────────
 function renderSidebar(filter='') {
   const el = document.getElementById('sbScroll');
+  if(!el) return;
   const groups = [
     { label: 'Accounting Standards', items: syllabus.filter(s => s.type==='section') },
     { label: 'Chapters', items: syllabus.filter(s => s.type==='chapter') },
@@ -766,12 +832,12 @@ function updateStats() {
   document.getElementById('rsTotal').textContent = all.length;
   document.getElementById('rsHours').textContent = hrs+'h';
   document.getElementById('rsRevision').textContent = rev;
-  renderSidebar();
 }
 
 // ─── LOG ─────────────────────────────────────────────────────────────────────
 function renderLog() {
   const el = document.getElementById('logList');
+  if(!el) return;
   if (!S.log || !S.log.length) { el.innerHTML='<div class="empty-log">No sessions yet</div>'; return; }
   el.innerHTML = S.log.slice(0,15).map(e => `<div class="log-row"><div class="log-dot"></div><div class="log-txt">${e.text}</div><div class="log-t">${e.time}</div></div>`).join('');
 }
@@ -780,7 +846,8 @@ function clearLog() { S.log=[]; saveS(); renderLog(); }
 // ─── SECTION SELECTION ────────────────────────────────────────────────────────
 function selectSection(id) {
   S.currentSection = id;
-  document.getElementById('tmSub').textContent = syllabus.find(s=>s.id===id)?.label || '';
+  const subDisp = document.getElementById('tmSub');
+  if(subDisp) subDisp.textContent = syllabus.find(s=>s.id===id)?.label || '';
   saveS();
   renderSidebar();
   renderMain();
@@ -797,9 +864,11 @@ function renderMain() {
 
   const starsCount = sec.topics.filter(t=>S.topicStars[t.id]).length;
   const inProg = sec.topics.filter(t=>(S.topicStatus[t.id]||'')==='in-progress').length;
-  const qBankCount = (S.qbank||[]).filter(q=>q.chapterId===sec.id).length; // Q-Bank count
+  const qBankCount = (S.qbank||[]).filter(q=>q.chapterId===sec.id).length;
 
-  document.getElementById('mainContent').innerHTML = `
+  const contentEl = document.getElementById('mainContent');
+  if(!contentEl) return;
+  contentEl.innerHTML = `
     <div class="ch-hdr">
       <div class="ch-hdr-row">
         <div class="ch-icon">${sec.icon}</div>
@@ -948,7 +1017,6 @@ function renderTab(sec) {
     const today = new Date().toISOString().split('T')[0];
     const dailyMins = S.timeLogs?.[today] || 0;
     
-    // Weekly calculation (last 7 days)
     let weeklyMins = 0;
     for(let i=0; i<7; i++) {
         const d = new Date(); 
@@ -957,7 +1025,6 @@ function renderTab(sec) {
         weeklyMins += (S.timeLogs?.[dateStr] || 0);
     }
     
-    // Total calculation
     const totalMins = S.studyMinutes || 0;
 
     tb.innerHTML = `
@@ -1011,7 +1078,7 @@ function toggleQBank(id) {
     const q = S.qbank.find(x => x.id === id);
     if(q) { 
         q.isDone = !q.isDone; 
-        if (q.isDone) checkAddStreak(); // Add streak if marked done
+        if (q.isDone) checkAddStreak(); 
         saveS(); 
         renderTab(syllabus.find(s=>s.id===S.currentSection)); 
     }
@@ -1071,7 +1138,7 @@ function saveNote(sid) {
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
-loadS();
+// Initial local render before Firebase updates state
 renderSidebar();
 renderMain();
 renderLog();
