@@ -7,11 +7,11 @@
 <style>
 :root {
   --gh-canvas: #ffffff;
-  --gh-subtle: #f8f9fa; 
+  --gh-subtle: #f8f9fa; /* Lighter, cleaner background */
   --gh-border: #d0d7de;
   --gh-border-muted: #e1e4e8;
-  --gh-header: #f8f9fa; 
-  --gh-sidebar: #ffffff; 
+  --gh-header: #f8f9fa; /* Light professional header */
+  --gh-sidebar: #ffffff; /* Clean white sidebar */
   --gh-sidebar-text: #24292f;
   --gh-sidebar-muted: #57606a;
   --gh-sidebar-border: #e1e4e8;
@@ -198,11 +198,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 .ov-fill{height:100%;border-radius:4px;transition:width .4s;}
 .ov-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--gh-text-2); font-weight:600;}
 
-/* Global QBank Page Wrapper */
-.global-qb-container { padding: 30px; max-width: 1200px; margin: 0 auto; }
-.global-qb-header { margin-bottom: 24px; display:flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gh-border); padding-bottom: 16px; }
-.global-qb-title { font-size: 22px; font-weight: 700; color: var(--gh-text); }
-
 /* ── RIGHT PANEL ── */
 .rpanel{width:280px;border-left:1px solid var(--gh-border);background:var(--gh-canvas);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;box-shadow:-1px 0 5px rgba(0,0,0,0.02);}
 .rpanel::-webkit-scrollbar{width:5px;}
@@ -266,13 +261,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
       <span id="hdrFrac" style="font-size:11px;">0/0</span>
     </div>
     <div class="hdr-pill" style="border-color:var(--gh-accent); color:var(--gh-accent); background:var(--gh-accent-bg);">New Syllabus 2024</div>
-    <!-- Integrated Navigation Toggle Button -->
-    <button id="viewToggleBtn" class="hdr-pill" onclick="toggleGlobalView()" style="background:#8250df; color:#fff; border:none; box-shadow: 0 2px 4px rgba(130, 80, 223, 0.3); cursor:pointer; font-family:inherit;">🎯 View All Master Q-Bank</button>
+    <a href="qbank.html" class="hdr-pill" style="text-decoration:none; background:#8250df; color:#fff; border:none; box-shadow: 0 2px 4px rgba(130, 80, 223, 0.3); cursor:pointer;">🎯 Go to Q-Bank</a>
   </div>
 </header>
 
-<!-- Primary App View -->
-<div class="body-wrap" id="appBodyWrap">
+<div class="body-wrap">
+
   <aside class="sidebar">
     <div class="sb-hdr">
       <span>Chapters &amp; AS</span>
@@ -326,19 +320,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
       <div id="logList"><div class="empty-log">No sessions yet</div></div>
     </div>
   </aside>
-</div>
-
-<!-- Integrated Global Q-Bank View -->
-<div class="content" id="globalQBankView" style="display:none; flex:1; overflow-y:auto;">
-  <div class="global-qb-container">
-    <div class="global-qb-header">
-       <div class="global-qb-title">🎯 Master Central Q-Bank (All Chapters)</div>
-       <button class="btn def" onclick="toggleGlobalView()">← Back to Dashboard</button>
-    </div>
-    <div style="background:var(--gh-canvas); border:1px solid var(--gh-border); border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.03);" id="globalQBankList">
-       <!-- Dynamic Global QBank Items injected here -->
-    </div>
-  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -475,7 +456,7 @@ const syllabus = [
       'Calculate Minority Interest in consolidated P&L and Balance Sheet',
       'Eliminate unrealised profit on inter-company stock transfers',
       'Apply equity method for associate company in CFS',
-      'Find goodwill or capital reserve when subsidiary acquired at mid-year',
+      'Find goodwill/capital reserve when subsidiary acquired at mid-year',
     ],
     mnemonics: [
       { key: 'Consolidation Steps (SEAMEN)', tip: 'Separate FS → Eliminate → Add line-by-line → Minority Interest → Eliminate Interco → Note goodwill' },
@@ -610,11 +591,11 @@ const DEF = {
   currentSection: syllabus[0].id, examDate: '', timeLogs: {}, streak: 0, lastStreakDate: '', qbank: []
 };
 let S = {};
-let isGlobalQBankActive = false;
 
 function loadS(){ 
   try{ const r=localStorage.getItem('ca_adv_v2_final'); S = r ? {...DEF,...JSON.parse(r)} : {...DEF}; }
   catch(e){ S={...DEF}; } 
+  // Restore Exam Date
   if (S.examDate) document.getElementById('examDate').value = S.examDate;
   checkStreakReset();
 }
@@ -646,70 +627,6 @@ function checkAddStreak() {
     updateStreakUI();
     toast(`🔥 Awesome! Streak increased to ${S.streak}!`);
   }
-}
-
-// ─── GLOBAL Q-BANK VIEW TOGGLE ────────────────────────────────────────────────
-function toggleGlobalView() {
-  isGlobalQBankActive = !isGlobalQBankActive;
-  const appView = document.getElementById('appBodyWrap');
-  const globalView = document.getElementById('globalQBankView');
-  const navBtn = document.getElementById('viewToggleBtn');
-  
-  if (isGlobalQBankActive) {
-    appView.style.display = 'none';
-    globalView.style.display = 'flex';
-    navBtn.textContent = '📊 Back to Dashboard';
-    renderGlobalQBank();
-  } else {
-    appView.style.display = 'flex';
-    globalView.style.display = 'none';
-    navBtn.textContent = '🎯 View All Master Q-Bank';
-    renderMain();
-  }
-}
-
-function renderGlobalQBank() {
-  const el = document.getElementById('globalQBankList');
-  if(!S.qbank || S.qbank.length === 0) {
-     el.innerHTML = '<div style="padding:40px;text-align:center;color:var(--gh-text-3);font-size:15px;font-weight:500;">No master questions collected from your dashboard tabs yet! Add items under chapter tabs.</div>';
-     return;
-  }
-  
-  // Group questions by chapter
-  let html = '';
-  syllabus.forEach(sec => {
-     const chapterQs = S.qbank.filter(q => q.chapterId === sec.id);
-     if(chapterQs.length > 0) {
-        html += `<div style="background:var(--gh-subtle); padding:10px 16px; font-weight:700; border-bottom:1px solid var(--gh-border); color:var(--gh-text); font-size:13px; text-transform:uppercase; letter-spacing:0.5px;">${sec.label} — ${sec.title}</div>`;
-        chapterQs.forEach(q => {
-           html += `
-            <div class="qb-item">
-                <input type="checkbox" class="qb-chk" ${q.isDone?'checked':''} onchange="toggleGlobalQBankItem('${q.id}')">
-                <div class="qb-text ${q.isDone?'done':''}">${q.text}</div>
-                <span class="qb-src">${q.source}</span>
-                <span class="lbl qb-cat-${q.category}">Cat ${q.category}</span>
-                <button class="qb-del" onclick="delGlobalQBankItem('${q.id}')" title="Delete">✖</button>
-            </div>`;
-        });
-     }
-  });
-  el.innerHTML = html;
-}
-
-function toggleGlobalQBankItem(id) {
-    const q = S.qbank.find(x => x.id === id);
-    if(q) { 
-        q.isDone = !q.isDone; 
-        if (q.isDone) checkAddStreak();
-        saveS(); 
-        renderGlobalQBank(); 
-    }
-}
-
-function delGlobalQBankItem(id) {
-    S.qbank = S.qbank.filter(x => x.id !== id);
-    saveS(); 
-    renderGlobalQBank();
 }
 
 // ─── TIMER ───────────────────────────────────────────────────────────────────
@@ -752,6 +669,7 @@ function logSession() {
   const mins = Math.max(1, Math.round(elapsed/60));
   S.studyMinutes = (S.studyMinutes||0) + mins;
   
+  // Daily Time Log
   const today = new Date().toISOString().split('T')[0];
   if(!S.timeLogs) S.timeLogs = {};
   S.timeLogs[today] = (S.timeLogs[today] || 0) + mins;
@@ -760,7 +678,7 @@ function logSession() {
   S.log.unshift(entry);
   if (S.log.length > 30) S.log.pop();
   saveS(); renderLog(); updateStats(); toast('✓ Session logged!');
-  if (currentTab === 'overview') renderTab(sec); 
+  if (currentTab === 'overview') renderTab(sec); // Refresh overview stats if open
 }
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
@@ -782,7 +700,7 @@ function toast(msg) {
 }
 function updateCountdown() {
   const d = document.getElementById('examDate').value;
-  S.examDate = d; saveS(); 
+  S.examDate = d; saveS(); // Persist Exam Date
   const el = document.getElementById('countdown');
   if (!d) { el.textContent=''; document.getElementById('sbDays').textContent='—'; return; }
   const diff = Math.ceil((new Date(d)-new Date())/(864e5));
@@ -839,13 +757,14 @@ function updateStats() {
   const done = all.filter(t => ['done','revision'].includes(S.topicStatus[t.id]||'')).length;
   const rev = all.filter(t => (S.topicStatus[t.id]||'')==='revision').length;
   const pct = Math.round(done/all.length*100);
+  const hrs = ((S.studyMinutes||0)/60).toFixed(1);
 
   document.getElementById('hdrPct').textContent = pct+'%';
   document.getElementById('hdrBar').style.width = pct+'%';
   document.getElementById('hdrFrac').textContent = `${done}/${all.length}`;
   document.getElementById('rsDone').textContent = done;
   document.getElementById('rsTotal').textContent = all.length;
-  document.getElementById('rsHours').textContent = ((S.studyMinutes||0)/60).toFixed(1)+'h';
+  document.getElementById('rsHours').textContent = hrs+'h';
   document.getElementById('rsRevision').textContent = rev;
   renderSidebar();
 }
@@ -860,7 +779,6 @@ function clearLog() { S.log=[]; saveS(); renderLog(); }
 
 // ─── SECTION SELECTION ────────────────────────────────────────────────────────
 function selectSection(id) {
-  if (isGlobalQBankActive) toggleGlobalView(); // Switch view if clicking sidebar item
   S.currentSection = id;
   document.getElementById('tmSub').textContent = syllabus.find(s=>s.id===id)?.label || '';
   saveS();
@@ -879,7 +797,7 @@ function renderMain() {
 
   const starsCount = sec.topics.filter(t=>S.topicStars[t.id]).length;
   const inProg = sec.topics.filter(t=>(S.topicStatus[t.id]||'')==='in-progress').length;
-  const qBankCount = (S.qbank||[]).filter(q=>q.chapterId===sec.id).length;
+  const qBankCount = (S.qbank||[]).filter(q=>q.chapterId===sec.id).length; // Q-Bank count
 
   document.getElementById('mainContent').innerHTML = `
     <div class="ch-hdr">
@@ -1030,6 +948,7 @@ function renderTab(sec) {
     const today = new Date().toISOString().split('T')[0];
     const dailyMins = S.timeLogs?.[today] || 0;
     
+    // Weekly calculation (last 7 days)
     let weeklyMins = 0;
     for(let i=0; i<7; i++) {
         const d = new Date(); 
@@ -1037,6 +956,8 @@ function renderTab(sec) {
         const dateStr = d.toISOString().split('T')[0];
         weeklyMins += (S.timeLogs?.[dateStr] || 0);
     }
+    
+    // Total calculation
     const totalMins = S.studyMinutes || 0;
 
     tb.innerHTML = `
@@ -1090,7 +1011,7 @@ function toggleQBank(id) {
     const q = S.qbank.find(x => x.id === id);
     if(q) { 
         q.isDone = !q.isDone; 
-        if (q.isDone) checkAddStreak();
+        if (q.isDone) checkAddStreak(); // Add streak if marked done
         saveS(); 
         renderTab(syllabus.find(s=>s.id===S.currentSection)); 
     }
